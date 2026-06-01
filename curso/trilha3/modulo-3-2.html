@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulo 3.2 — Humanoides — VLA Mastery</title>
+  <meta name="description" content="Humanoides e VLA: por que a forma humana, NVIDIA GR00T N1/N1.5, Figure Helix System 1/2, Tesla Optimus, Unitree G1/H1 e whole-body control." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <a href="../../" class="flex items-center gap-2">
+            <span class="text-xl">🦾</span>
+            <span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+          </a>
+          <span class="dark:text-gray-600 light-text-gray-400">|</span>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+        </div>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../trilha1/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">Trilha 1</a>
+          <a href="../trilha2/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">Trilha 2</a>
+          <a href="../trilha3/" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10 transition-colors">Trilha 3</a>
+          <button id="theme-toggle" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" aria-label="Alternar tema">
+            <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+        </div>
+        <div class="flex items-center gap-2 md:hidden">
+          <button id="theme-toggle-mobile" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" aria-label="Alternar tema">
+            <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+          <button id="mobile-menu-btn" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4">
+        <div class="flex flex-col gap-3">
+          <a href="../" class="text-sm font-medium dark:text-gray-300 light-text-gray-600">← Mapa do curso</a>
+          <a href="../trilha1/" class="text-sm font-medium text-emerald-400">Trilha 1 — Fundamentos</a>
+          <a href="../trilha2/" class="text-sm font-medium text-blue-400">Trilha 2 — Ferramentas</a>
+          <a href="../trilha3/" class="text-sm font-medium text-purple-400">Trilha 3 — Avançado</a>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400">INEMA.CLUB</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-purple-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto">
+      <a href="index.html" class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-purple-400 mb-4 inline-block">← Voltar à Trilha 3</a>
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full mb-4">MÓDULO 3.2</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🤖 Humanoides: Figure, Tesla, Unitree, GR00T</h1>
+      <p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">A aposta mais audaciosa da robótica em 2026: um corpo de propósito geral, com forma humana, capaz de operar o mundo que já construímos para nós — e os foundation models que o controlam.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">~50</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Avançado</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nível</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Teoria</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-10">Conteúdo detalhado</h2>
+
+    <!-- SVG: dual-system -->
+    <div class="rounded-2xl border border-purple-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
+      <svg role="img" aria-label="Arquitetura dual-system de um humanoide: System 2 lento que raciocina envia vetor latente para System 1 rápido que controla os atuadores" class="w-full h-auto" viewBox="0 0 880 300" font-family="Inter,sans-serif">
+        <defs>
+          <linearGradient id="m32-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a855f7"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+          <filter id="m32-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.6"/></filter>
+        </defs>
+        <rect x="0" y="0" width="880" height="300" rx="18" fill="#0b0f1a" opacity="0.35"/>
+        <!-- System 2 -->
+        <g transform="translate(40,60)">
+          <rect x="0" y="0" width="250" height="180" rx="16" fill="#0b0f1a" stroke="#a855f7" stroke-width="2"/>
+          <text x="125" y="34" text-anchor="middle" fill="#a855f7" font-size="16" font-weight="800">SYSTEM 2</text>
+          <text x="125" y="56" text-anchor="middle" fill="#c4b5fd" font-size="12">VLM lento · ~7-9 Hz</text>
+          <rect x="30" y="78" width="190" height="30" rx="8" fill="#a855f7" opacity="0.22"/>
+          <text x="125" y="98" text-anchor="middle" fill="#e9d5ff" font-size="11">raciocínio · linguagem · plano</text>
+          <rect x="30" y="118" width="190" height="30" rx="8" fill="#a855f7" opacity="0.22"/>
+          <text x="125" y="138" text-anchor="middle" fill="#e9d5ff" font-size="11">visão semântica · objetivo</text>
+        </g>
+        <!-- latent vector arrow -->
+        <g transform="translate(300,150)">
+          <path d="M0 0 L260 0" stroke="url(#m32-grad)" stroke-width="3" marker-end="url(#m32-arrow)"/>
+          <rect x="70" y="-20" width="120" height="40" rx="10" fill="#0b0f1a" stroke="#38bdf8" stroke-width="1.6"/>
+          <text x="130" y="-1" text-anchor="middle" fill="url(#m32-grad)" font-size="11" font-weight="700">vetor latente</text>
+          <text x="130" y="13" text-anchor="middle" fill="#7dd3fc" font-size="10">z (intenção)</text>
+        </g>
+        <defs><marker id="m32-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L8 3 L0 6 Z" fill="#38bdf8"/></marker></defs>
+        <!-- System 1 -->
+        <g transform="translate(590,60)">
+          <rect x="0" y="0" width="250" height="180" rx="16" fill="#0b0f1a" stroke="#38bdf8" stroke-width="2"/>
+          <text x="125" y="34" text-anchor="middle" fill="#38bdf8" font-size="16" font-weight="800">SYSTEM 1</text>
+          <text x="125" y="56" text-anchor="middle" fill="#7dd3fc" font-size="12">política rápida · ~200 Hz</text>
+          <circle cx="125" cy="118" r="34" fill="#38bdf8" opacity="0.4" filter="url(#m32-glow)"/>
+          <text x="125" y="122" text-anchor="middle" fill="#e0f2fe" font-size="11">controle motor</text>
+          <text x="125" y="166" text-anchor="middle" fill="#7dd3fc" font-size="10">mãos · torso · juntas</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">1</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🚶 Por que humanoides: mundo feito para humanos</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A tese do humanoide é simples e poderosa: <strong class="text-purple-400">o mundo já foi construído para a forma humana</strong>. Maçanetas, escadas, ferramentas, bancadas e veículos pressupõem duas mãos, dois pés e altura de pessoa. Um robô humanoide opera nesse estoque mundial de infraestrutura — <em>brownfield</em> — sem reformá-lo, ao contrário de braços fixos que exigem células dedicadas.</p>
+
+      <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 A aposta de fundo</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Generalidade de <strong>forma</strong> (humanoide) × generalidade de <strong>cérebro</strong> (foundation model VLA) = um único produto endereçando incontáveis tarefas. É a convergência que move dezenas de bilhões em capital para o setor desde 2024.</p>
+      </div>
+
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por que a forma humana é difícil — e vale a pena</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>~30-50 DOF</strong> — um humanoide tem ordem de magnitude mais graus de liberdade que um braço, exigindo whole-body control.</li>
+          <li><strong>Equilíbrio dinâmico</strong> — bípede é instável por natureza; manipular caminhando é o teste real de utilidade.</li>
+          <li><strong>TAM gigantesco</strong> — o argumento econômico é endereçar trabalho físico genérico, não uma estação só.</li>
+        </ul>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Generalidade de forma</p><p class="text-xs dark:text-gray-400 light-text-gray-600">1 corpo, N ambientes.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Brownfield</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Opera infra existente.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Dexterity</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mãos hábeis multi-dedo.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">DOF</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Graus de liberdade altos.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">2</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🟢 NVIDIA GR00T (N1/N1.5): foundation model dual</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">GR00T</strong> é o foundation model aberto da NVIDIA para humanoides. O <strong>N1</strong> inaugurou um modelo de fundação cross-embodiment com <strong>sistema dual</strong> — um módulo de raciocínio lento (System 2, baseado em VLM) e um módulo de ação rápido (System 1, baseado em difusão). O <strong>N1.5</strong> refinou seguimento de instrução e generalização. A NVIDIA acopla a isso o pipeline Isaac GR00T + Cosmos para gerar dados sintéticos e neural-trajectories em massa.</p>
+
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>GR00T N1 — pilha de dados (pirâmide)
+  topo:  poucas demos reais (teleoperação)      ← fidelidade
+  meio:  dados sintéticos (Isaac/Cosmos)        ← escala física
+  base:  vídeo humano web + neural trajectories ← semântica / amplitude
+=> cross-embodiment: 1 modelo treinado para muitos corpos</code></pre>
+      </div>
+
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Por que importa estrategicamente</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">A NVIDIA não fabrica humanoides — fornece o <strong>cérebro + a fábrica de dados + o silício</strong>. Vários OEMs (1X, Agility, Boston Dynamics, Unitree e outros) adotam GR00T/Isaac, posicionando a NVIDIA como a camada horizontal do ecossistema, análoga ao que CUDA foi para deep learning.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">GR00T N1/N1.5</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Foundation aberto p/ humanoide.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Sistema dual</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Raciocínio + ação.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cosmos / Isaac</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dados sintéticos em massa.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cross-embodiment</p><p class="text-xs dark:text-gray-400 light-text-gray-600">1 modelo, muitos corpos.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔵 Figure Helix: VLA hierárquico (System 1/2)</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Helix</strong>, da Figure, é um VLA hierárquico que rodou onboard num humanoide. O <strong>System 2</strong> (VLM de internet, ~7-9 Hz) entende cena e instrução e emite um <em>vetor latente</em>; o <strong>System 1</strong> (política visuomotora, ~200 Hz) decodifica esse latente em controle contínuo de torso, cabeça e <strong>mãos hábeis</strong>. Foi um dos primeiros a controlar o tronco superior completo de um humanoide com um único VLA — e a rodar dois robôs colaborando com um mesmo modelo.</p>
+
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">S2</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">System 2 — pensar (lento)</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">VLM generalista interpreta "guarde a louça"; produz intenção latente sem precisar rodar a 200 Hz.</p></div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">S1</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">System 1 — agir (rápido)</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Transformer visuomotor consome o latente e gera comandos de alta frequência para mãos e torso.</p></div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 O conflito que o dual-system resolve</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Um VLM grande é esperto mas lento; um controlador rápido é ágil mas burro. Separar os dois e conectá-los por um <strong>vetor latente</strong> dá o melhor dos dois: raciocínio generalista + malha de controle de alta frequência. É a arquitetura convergente dos humanoides de ponta.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Helix</p><p class="text-xs dark:text-gray-400 light-text-gray-600">VLA hierárquico da Figure.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">System 1/2</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Rápido + lento acoplados.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Latent vector</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ponte entre os sistemas.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Whole-upper-body</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Torso + mãos por 1 VLA.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔴 Tesla Optimus: integração com pilha de visão/FSD</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Optimus</strong> é a aposta da Tesla em um humanoide reusando a infraestrutura de IA do FSD: redes de visão end-to-end, compute proprietário e cultura de coleta de dados em escala. A estratégia é começar pela <strong>manufatura interna</strong> (mover peças nas próprias fábricas), gerando dados de teleoperação verticalmente integrados antes de escalar para fora.</p>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Vantagens da Tesla</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Reuso da pilha de <strong>visão end-to-end</strong> e dados do FSD.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Escala de <strong>manufatura própria</strong> e atuadores projetados in-house.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Demanda interna cativa para fechar o loop de dados.</span></li>
+          </ul>
+        </div>
+        <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Desafios em aberto</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Manipulação <strong>dexterosa</strong> robusta ainda é o gargalo (mãos).</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Cronogramas anunciados historicamente otimistas.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Generalização fora da fábrica ainda por provar em escala.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Optimus</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Humanoide da Tesla.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">FSD reuse</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Visão end-to-end compartilhada.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Escala industrial</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Fábrica como primeiro cliente.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Atuadores próprios</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Integração vertical de hardware.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🟠 Unitree e o open hardware: G1/H1</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A <strong class="text-purple-400">Unitree</strong> mudou o jogo da pesquisa ao lançar humanoides de baixo custo: o <strong>H1</strong> (full-size, locomoção ágil) e o <strong>G1</strong> (~1,27 m, a partir de ~US$ 16k). De repente, laboratórios sem orçamento de milhões puderam rodar políticas em hardware real. O resultado foi uma explosão de papers de locomoção e loco-manipulation usando G1/H1 como plataforma padrão.</p>
+
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por que o custo importa</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>~10-50×</strong> mais barato que plataformas de pesquisa ocidentais comparáveis.</li>
+          <li><strong>SDK aberto</strong> e ROS2 — baixa barreira para integrar políticas VLA e RL de marcha.</li>
+          <li><strong>Padronização</strong> — comparabilidade entre papers acelera o campo todo.</li>
+        </ul>
+      </div>
+
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica estratégica</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Hardware acessível desloca o gargalo do campo de "ter um robô" para "ter dados e algoritmos". Quem domina coleta de dados e arquitetura — não quem fabrica o braço — captura mais valor. Foi assim que o open hardware acelerou a fronteira.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Unitree G1/H1</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Humanoides de baixo custo.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">~US$ 16k</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Preço-base do G1.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">SDK aberto</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Integração fácil.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Plataforma padrão</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Base de muitos papers.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">6</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚖️ Locomoção + manipulação: whole-body control</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A fronteira do humanoide não é caminhar nem agarrar isoladamente — é <strong class="text-purple-400">fazer os dois ao mesmo tempo</strong>. O <strong>whole-body control</strong> coordena marcha, equilíbrio e braços num só controlador, geralmente com <strong>RL</strong> para locomoção robusta em terreno variado e uma política de manipulação acoplada. Manipular enquanto se equilibra é o que separa uma demo viral de utilidade econômica real.</p>
+
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">RL de marcha em sim</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Política de locomoção robusta treinada em milhares de terrenos randomizados (sim-to-real do M3.1).</p></div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">2</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Equilíbrio sob perturbação</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Controlar o centro de massa enquanto os braços aplicam força externa (empurrar, carregar).</p></div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">3</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Loco-manipulation acoplada</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Andar até um armário, abrir e guardar um objeto: skills encadeadas num corpo único.</p></div>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Whole-body control</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Coordenar corpo inteiro.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">RL de marcha</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Locomoção robusta.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Balance</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Centro de massa sob força.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Loco-manipulation</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Andar + manipular junto.</p></div>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br dark:from-purple-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumo do módulo</h2>
+        <div class="space-y-3 mb-8">
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Forma humana</strong><span class="dark:text-gray-400 light-text-gray-600"> — opera o mundo brownfield existente; generalidade de forma × foundation model.</span></div></div>
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">GR00T</strong><span class="dark:text-gray-400 light-text-gray-600"> — NVIDIA fornece cérebro dual + fábrica de dados (Isaac/Cosmos) cross-embodiment.</span></div></div>
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Figure Helix</strong><span class="dark:text-gray-400 light-text-gray-600"> — System 1/2 com vetor latente; um VLA controla torso e mãos.</span></div></div>
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Tesla & Unitree</strong><span class="dark:text-gray-400 light-text-gray-600"> — escala industrial integrada vs open hardware barato que democratiza a pesquisa.</span></div></div>
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Whole-body control</strong><span class="dark:text-gray-400 light-text-gray-600"> — manipular caminhando é o teste real de utilidade.</span></div></div>
+        </div>
+        <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">3.3 — Arquiteturas Híbridas: LLM Planner + VLA Executor. Como o dual-system se generaliza para planejamento de horizonte longo.</p></div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-start">
+          <a href="index.html" class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition">← Voltar à trilha</a>
+          <a href="modulo-3-3.html" class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition">Próximo módulo →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <a href="../../" class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors">🦾 VLA Mastery</a>
+        <span class="dark:text-gray-600 light-text-gray-400">|</span>
+        <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+      </div>
+      <p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

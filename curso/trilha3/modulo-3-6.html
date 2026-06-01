@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulo 3.6 — Fronteira 2026-2030 — VLA Mastery</title>
+  <meta name="description" content="A fronteira da robótica 2026-2030: scaling laws, world models (Genie, Cosmos), self-improvement, fleet learning, certificação ISO e cenários de 2030." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <a href="../../" class="flex items-center gap-2">
+            <span class="text-xl">🦾</span>
+            <span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+          </a>
+          <span class="dark:text-gray-600 light-text-gray-400">|</span>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+        </div>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../trilha1/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">Trilha 1</a>
+          <a href="../trilha2/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">Trilha 2</a>
+          <a href="../trilha3/" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10 transition-colors">Trilha 3</a>
+          <button id="theme-toggle" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" aria-label="Alternar tema">
+            <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+        </div>
+        <div class="flex items-center gap-2 md:hidden">
+          <button id="theme-toggle-mobile" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" aria-label="Alternar tema">
+            <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+          <button id="mobile-menu-btn" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4">
+        <div class="flex flex-col gap-3">
+          <a href="../" class="text-sm font-medium dark:text-gray-300 light-text-gray-600">← Mapa do curso</a>
+          <a href="../trilha1/" class="text-sm font-medium text-emerald-400">Trilha 1 — Fundamentos</a>
+          <a href="../trilha2/" class="text-sm font-medium text-blue-400">Trilha 2 — Ferramentas</a>
+          <a href="../trilha3/" class="text-sm font-medium text-purple-400">Trilha 3 — Avançado</a>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400">INEMA.CLUB</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-purple-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto">
+      <a href="index.html" class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-purple-400 mb-4 inline-block">← Voltar à Trilha 3</a>
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full mb-4">MÓDULO 3.6</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🚀 Fronteira 2026-2030: Scaling Laws, World Models, Certificação</h1>
+      <p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">O módulo final olha adiante: as perguntas em aberto que decidem se a robótica generalista cumpre a promessa — e o que muda no trabalho, na indústria e na sociedade quando cumprir.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">~45</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Avançado</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nível</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-purple-400">Estrat.</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-10">Conteúdo detalhado</h2>
+
+    <!-- SVG: curva de capacidade 2026-2030 -->
+    <div class="rounded-2xl border border-purple-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
+      <svg role="img" aria-label="Curva de capacidade da robótica generalista projetada de 2026 a 2030, com marcos de world models, self-improvement, fleet learning e certificação" class="w-full h-auto" viewBox="0 0 880 320" font-family="Inter,sans-serif">
+        <defs>
+          <linearGradient id="m36-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a855f7"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+          <filter id="m36-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>
+        </defs>
+        <rect x="0" y="0" width="880" height="320" rx="18" fill="#0b0f1a" opacity="0.35"/>
+        <line x1="80" y1="40" x2="80" y2="270" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="80" y1="270" x2="840" y2="270" stroke="#64748b" stroke-width="1.5"/>
+        <text x="60" y="44" fill="#94a3b8" font-size="11" text-anchor="end">capacidade</text>
+        <!-- projection curve -->
+        <path d="M80 250 C 260 240, 380 200, 500 150 S 720 70, 840 50" fill="none" stroke="url(#m36-grad)" stroke-width="3.5" filter="url(#m36-glow)"/>
+        <path d="M80 250 C 260 240, 380 200, 500 150" fill="none" stroke="url(#m36-grad)" stroke-width="3.5"/>
+        <path d="M500 150 S 720 70, 840 50" fill="none" stroke="url(#m36-grad)" stroke-width="3.5" stroke-dasharray="8 6"/>
+        <!-- milestones -->
+        <g font-size="11" font-weight="700">
+          <circle cx="170" cy="245" r="6" fill="#a855f7"/><text x="170" y="290" text-anchor="middle" fill="#c4b5fd">2026</text><text x="170" y="228" text-anchor="middle" fill="#e9d5ff">scaling laws?</text>
+          <circle cx="360" cy="208" r="6" fill="#a855f7"/><text x="360" y="290" text-anchor="middle" fill="#c4b5fd">2027</text><text x="360" y="192" text-anchor="middle" fill="#e9d5ff">world models</text>
+          <circle cx="540" cy="138" r="6" fill="#38bdf8"/><text x="540" y="290" text-anchor="middle" fill="#7dd3fc">2028</text><text x="540" y="122" text-anchor="middle" fill="#e0f2fe">self-improve</text>
+          <circle cx="700" cy="86" r="6" fill="#38bdf8"/><text x="700" y="290" text-anchor="middle" fill="#7dd3fc">2029</text><text x="700" y="70" text-anchor="middle" fill="#e0f2fe">fleet + ISO</text>
+          <circle cx="828" cy="52" r="7" fill="#38bdf8" filter="url(#m36-glow)"/><text x="828" y="290" text-anchor="middle" fill="#7dd3fc">2030</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">1</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📐 Scaling laws para robótica</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A pergunta de bilhões: <strong class="text-purple-400">o desempenho de VLAs escala previsivelmente com dados e compute</strong>, como nos LLMs? Se houver leis de escala claras, a corrida vira coleta de dados em escala industrial. Se não — se a arquitetura ou o embodiment dominarem — então engenhosidade importa mais que volume. Em 2026 a evidência ainda é parcial e contestada.</p>
+
+      <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 Por que robótica é diferente de LLM</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Texto da web é praticamente gratuito e abundante; trajetórias de robô são caras e escassas. Mesmo que as scaling laws valham, o gargalo é <strong>obter os dados</strong>. Por isso world models e self-improvement (tópicos a seguir) são tão estratégicos — atacam a oferta de dados.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Scaling laws</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Desempenho ~ dados×compute.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Data×compute</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Os dois eixos da escala.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Incerteza</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Evidência ainda parcial.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Escassez de dados</p><p class="text-xs dark:text-gray-400 light-text-gray-600">O gargalo real.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">2</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🌍 World models: Genie, Cosmos</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">World models</strong> aprendem a dinâmica do mundo — dado um estado e uma ação, prevê o próximo estado. <strong>Genie</strong> (DeepMind) gera ambientes interativos a partir de vídeo; <strong>NVIDIA Cosmos</strong> é uma plataforma de world foundation models para gerar dados físicos sintéticos. Eles atacam o gargalo de dados do tópico anterior: simulação neural barata e quase infinita para treinar e planejar.</p>
+
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Dois usos de world models</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>Gerar dados</strong> — sintetizar trajetórias físicas plausíveis em massa (Cosmos), reduzindo a coleta real.</li>
+          <li><strong>Planejar imaginando</strong> — o robô "sonha" futuros no modelo antes de agir (model-based RL).</li>
+          <li><strong>Ponte com sim-to-real</strong> — complementam Isaac/MuJoCo com renderização e dinâmica aprendidas.</li>
+        </ul>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">World model</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Aprende dinâmica do mundo.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Genie</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ambientes interativos gerados.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cosmos</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dados físicos sintéticos.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Neural sim</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Simulação aprendida.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">♻️ Self-improvement: robôs gerando dados</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O santo graal é o <strong class="text-purple-400">flywheel de autoaperfeiçoamento</strong>: robôs que coletam seus próprios dados via RL em escala e autonomia de coleta, melhorando sem demonstração humana a cada ciclo. Combinado com world models, isso pode tornar a melhoria contínua e barata — o equivalente robótico do RLHF/RL em LLMs.</p>
+
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Coleta autônoma</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">O robô tenta tarefas sozinho, gerando dados rotulados por sucesso/falha automático.</p></div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">2</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">RL em escala</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Melhora a política com a própria experiência, em sim (world model) e no real.</p></div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">3</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Flywheel</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Melhor política → mais sucesso → mais dados úteis → política ainda melhor.</p></div>
+        </div>
+      </div>
+
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Por que ainda não chegamos lá</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">RL real é caro e arriscado (hardware quebra), e definir recompensa para tarefas abertas é difícil. World models reduzem o custo levando o RL para o sim neural, mas fechar o flywheel com confiabilidade é fronteira ativa de 2026-2028.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Self-improvement</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Melhora sem humano.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">RL em escala</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Aprender da experiência.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Autonomia</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Coleta sem teleoperação.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Flywheel</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ciclo composto de melhoria.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🚢 Multi-robô e transferência: fleet learning</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A consequência natural de um foundation model é <strong class="text-purple-400">um cérebro, muitos corpos</strong>. No <strong>fleet learning</strong>, cada robô em campo contribui dados que melhoram o modelo central, e cada update via OTA melhora a frota inteira. Combinado com cross-embodiment (Trilha 2), uma melhoria num braço pode beneficiar um humanoide.</p>
+
+      <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 A vantagem composta da frota</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">É o mesmo efeito de rede que tornou o FSD da Tesla difícil de alcançar: quem tem mais robôs operando aprende mais rápido, o que vende mais robôs. O <strong>fleet learning</strong> transforma escala de deploy em vantagem de modelo — um moat que se aprofunda com o tempo.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Fleet learning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Frota aprende junta.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cross-embodiment</p><p class="text-xs dark:text-gray-400 light-text-gray-600">1 cérebro, N corpos.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Transferência</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Melhoria se propaga.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">OTA</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Update remoto da frota.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🛡️ Segurança e certificação: ISO, fail-safe</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Nenhum deploy em escala perto de humanos acontece sem <strong class="text-purple-400">certificação</strong>. Normas como <strong>ISO 10218</strong> (robôs industriais) e <strong>ISO/TS 15066</strong> (cobots) definem limites de força e protocolos. O desafio novo: como certificar um sistema <em>aprendido e probabilístico</em>? Exige fail-safes determinísticos, garantias de monitoramento e alinhamento físico.</p>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Caminho de certificação</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span><strong>Fail-safe</strong> determinístico envolvendo a política aprendida (camada de segurança rígida).</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Limites de força/velocidade certificáveis (ISO 15066) por hardware.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Monitoramento em runtime e parada segura garantida.</span></li>
+          </ul>
+        </div>
+        <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que ainda não resolve</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Garantir comportamento de uma rede em situações inéditas (out-of-distribution).</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Normas que ainda não cobrem autonomia aprendida em ambiente aberto.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Responsabilidade legal por decisão autônoma.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">ISO 10218/15066</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Normas de segurança.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Fail-safe</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Camada de segurança rígida.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Garantias</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Certificar o aprendido.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Alinhamento físico</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Agir dentro de limites.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">6</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔮 Cenários 2030: trabalho, indústria, sociedade</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Onde tudo isso nos leva? Os cenários 2030 vão de <strong class="text-purple-400">transformador</strong> (robôs generalistas em fábricas, armazéns e lares, ganho de produtividade comparável à eletricidade) a <strong>incremental</strong> (deploy lento, preso ao vale da desilusão). A verdade provável está no meio — adoção setor a setor, começando pelos casos maduros do Módulo 3.4.</p>
+
+      <div class="space-y-6 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">A</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Cenário acelerado</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Scaling laws valem + world models destravam dados + fleet learning compõe. Robôs úteis em massa até ~2030.</p></div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">B</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Cenário base</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Adoção setorial: logística e manufatura primeiro, doméstico só no fim da década. Transição gradual de trabalho.</p></div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">C</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Cenário cético</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Gap sim-real e certificação travam; o setor passa anos no vale da desilusão antes de maturar.</p></div>
+        </div>
+      </div>
+
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ O que fazer com isso</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Você não precisa adivinhar o cenário certo — precisa estar posicionado para qualquer um. Dominar a stack (Trilhas 1-2) e a estratégia (Trilha 3) te torna valioso tanto no boom quanto no vale. Esse é o objetivo do VLA Mastery.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cenários 2030</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Acelerado/base/cético.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Produtividade</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ganho potencial enorme.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Deslocamento</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Transição de trabalho.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Posicionamento</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Valioso em qualquer cenário.</p></div>
+      </div>
+    </section>
+
+    <!-- RESUMO FINAL DA TRILHA -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br dark:from-purple-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumo do módulo</h2>
+        <div class="space-y-3 mb-8">
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Scaling laws incertas</strong><span class="dark:text-gray-400 light-text-gray-600"> — se valerem, dados viram a corrida; mas a escassez de dados é o gargalo.</span></div></div>
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">World models</strong><span class="dark:text-gray-400 light-text-gray-600"> — Genie e Cosmos geram dados e planejam, atacando o gargalo de dados.</span></div></div>
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Self-improvement + fleet learning</strong><span class="dark:text-gray-400 light-text-gray-600"> — flywheel autônomo e frota que aprende junta compõem vantagem.</span></div></div>
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Certificação é o portão</strong><span class="dark:text-gray-400 light-text-gray-600"> — ISO + fail-safe decidem deploy em escala perto de humanos.</span></div></div>
+          <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Posicione-se para qualquer cenário</strong><span class="dark:text-gray-400 light-text-gray-600"> — domínio de stack + estratégia é valioso no boom e no vale.</span></div></div>
+        </div>
+        <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">🎓 Você concluiu a Trilha 3 — e o VLA Mastery</h3><p class="dark:text-gray-300 light-text-gray-700">Da pilha da cognição (Trilha 1), passando pela stack técnica (Trilha 2), até a estratégia da fronteira (Trilha 3): você agora lê a robótica generalista de ponta a ponta. Volte ao mapa do curso para revisar qualquer trilha.</p></div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-start">
+          <a href="index.html" class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition">← Voltar à trilha</a>
+          <a href="../" class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition">Voltar ao mapa do curso →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <a href="../../" class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors">🦾 VLA Mastery</a>
+        <span class="dark:text-gray-600 light-text-gray-400">|</span>
+        <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+      </div>
+      <p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

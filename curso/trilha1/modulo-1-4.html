@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulo 1.4 — Imitation e Behavior Cloning — VLA Mastery</title>
+  <meta name="description" content="Behavior cloning, distribution shift, erro composto, DAgger, multimodalidade das ações e métricas de generalização." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <a href="../../" class="flex items-center gap-2">
+            <span class="text-xl">🦾</span>
+            <span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+          </a>
+          <span class="dark:text-gray-600 light-text-gray-400">|</span>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+        </div>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../trilha1/" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10 transition-colors">Trilha 1</a>
+          <a href="../trilha2/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">Trilha 2</a>
+          <a href="../trilha3/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">Trilha 3</a>
+          <button id="theme-toggle" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" aria-label="Alternar tema">
+            <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+        </div>
+        <div class="flex items-center gap-2 md:hidden">
+          <button id="theme-toggle-mobile" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" aria-label="Alternar tema">
+            <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+          <button id="mobile-menu-btn" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4">
+        <div class="flex flex-col gap-3">
+          <a href="../" class="text-sm font-medium dark:text-gray-300 light-text-gray-600">← Mapa do curso</a>
+          <a href="../trilha1/" class="text-sm font-medium text-emerald-400">Trilha 1 — Fundamentos</a>
+          <a href="../trilha2/" class="text-sm font-medium text-blue-400">Trilha 2 — Ferramentas</a>
+          <a href="../trilha3/" class="text-sm font-medium text-purple-400">Trilha 3 — Avançado</a>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400">INEMA.CLUB</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-emerald-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto">
+      <a href="index.html" class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-emerald-400 mb-4 inline-block">← Trilha 1</a>
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full mb-4">MÓDULO 1.4</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🎯 Aprendizado por Imitação e Behavior Cloning</h1>
+      <p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">A receita mais usada para treinar VLAs também é a mais frágil. Behavior cloning copia o demonstrador por regressão supervisionada — mas pequenos erros levam o robô para estados nunca vistos, e o erro se acumula. Aqui você entende por que isso acontece e como mitigar.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">~40</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Interm.</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nível</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-emerald-400">Teo+Prát</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <nav class="text-sm dark:text-gray-500 light-text-gray-500 mb-10"><a href="../" class="hover:text-emerald-400">Curso</a> / <a href="index.html" class="hover:text-emerald-400">Trilha 1</a> / <span class="text-emerald-400">Módulo 1.4</span></nav>
+
+    <h2 class="text-xl font-bold dark:text-white light-text-gray-900 mb-8 pb-3 border-b border-dark-600 light-border-gray-200">Conteúdo detalhado</h2>
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">1</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📝 Behavior Cloning: a formulação básica</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">Behavior Cloning (BC)</strong> reduz controle a aprendizado supervisionado: dado um dataset de pares (estado, ação) demonstrados por um humano, treina-se uma política π(a|s) que maximiza a verossimilhança das ações observadas. É simples, estável e escala — por isso quase todo VLA (RT-1, OpenVLA, π0) é treinado por BC. A política não precisa de recompensa nem de interação com o ambiente durante o treino, apenas das demonstrações.</p>
+
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Behavior Cloning — objetivo
+#   maximizar  Σ log π(a_t | s_t)   sobre demos do expert
+for (obs, action) in demo_loader:
+    pred = policy(obs)               # estado → ação
+    loss = criterion(pred, action)   # ex: cross-entropy ou flow
+    loss.backward(); opt.step()</code></pre>
+      </div>
+
+      <div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Por que BC é o padrão</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Coletar demos é mais seguro e barato que deixar um robô explorar por reforço no mundo real (onde falhas quebram hardware). BC transforma um problema de controle num problema de aprendizado supervisionado bem-comportado.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Supervised policy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Aprender ação como rótulo.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">π(a|s)</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Distribuição de ação dado estado.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Max likelihood</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Objetivo de treino do BC.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Offline</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sem interação no treino.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">2</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📉 Distribution shift e erro composto</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O calcanhar de Aquiles do BC: o modelo é treinado na distribuição de estados do <strong class="text-emerald-400">expert</strong>, mas em execução visita estados que ele próprio gerou. Um pequeno erro desvia o robô para um estado ligeiramente fora da distribuição, onde a política é menos confiável, comete um erro maior, e assim por diante — o <strong class="text-emerald-400">erro composto (compounding error)</strong>. Teoricamente, o custo cresce com <strong class="text-emerald-400">O(εT²)</strong> no horizonte T, contra O(εT) ideal.</p>
+
+      <div class="rounded-2xl border border-emerald-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-6">
+        <svg role="img" aria-label="Gráfico de distribution shift: trajetória do expert estável versus trajetória do clone que se desvia e acumula erro ao longo do tempo" class="w-full h-auto" viewBox="0 0 760 300" font-family="Inter,sans-serif">
+          <defs>
+            <linearGradient id="m14-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#10b981"/><stop offset="1" stop-color="#ef4444"/></linearGradient>
+            <filter id="m14-glow"><feGaussianBlur stdDeviation="1.6"/></filter>
+          </defs>
+          <line x1="60" y1="250" x2="720" y2="250" stroke="#374151" stroke-width="1.5"/>
+          <line x1="60" y1="40" x2="60" y2="250" stroke="#374151" stroke-width="1.5"/>
+          <text x="390" y="285" text-anchor="middle" fill="#64748b" font-size="12">tempo (passos) →</text>
+          <text x="30" y="150" text-anchor="middle" fill="#64748b" font-size="12" transform="rotate(-90 30 150)">desvio</text>
+          <!-- expert -->
+          <path d="M60 150 L720 150" stroke="#10b981" stroke-width="3" stroke-dasharray="6 4"/>
+          <text x="610" y="140" fill="#10b981" font-size="12" font-weight="700">expert (treino)</text>
+          <!-- clone diverging -->
+          <path d="M60 150 Q 280 158, 420 185 T 720 60" stroke="url(#m14-g)" stroke-width="3.5" fill="none" filter="url(#m14-glow)"/>
+          <path d="M60 150 Q 280 158, 420 185 T 720 60" stroke="url(#m14-g)" stroke-width="3" fill="none"/>
+          <text x="560" y="95" fill="#ef4444" font-size="12" font-weight="700">clone (execução)</text>
+          <!-- error gaps -->
+          <line x1="300" y1="150" x2="300" y2="166" stroke="#94a3b8" stroke-width="1.5"/>
+          <line x1="500" y1="150" x2="500" y2="175" stroke="#94a3b8" stroke-width="1.5"/>
+          <line x1="680" y1="150" x2="680" y2="78" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <text x="690" y="115" fill="#ef4444" font-size="11">erro O(εT²)</text>
+          <circle cx="60" cy="150" r="4" fill="#10b981"/>
+        </svg>
+        <p class="text-xs dark:text-gray-500 light-text-gray-500 mt-3 text-center">Pequenos desvios saem da distribuição de treino e se amplificam — a falha estrutural do behavior cloning ingênuo.</p>
+      </div>
+
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 A matemática do drift</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>O(εT²)</strong> — custo de erro do BC ingênuo (Ross &amp; Bagnell).</li>
+          <li><strong>O(εT)</strong> — custo ideal de uma política com correção on-policy.</li>
+          <li><strong>ε</strong> — taxa de erro por passo; horizontes longos punem o BC.</li>
+        </ul>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Covariate shift</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Estados de teste ≠ de treino.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Compounding error</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Erros que se acumulam.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">O(εT²)</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Custo quadrático no horizonte.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Recovery behavior</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Saber voltar à trajetória.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">3</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔄 DAgger e teleoperação</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">DAgger</strong> (Dataset Aggregation) ataca o distribution shift coletando rótulos <strong class="text-emerald-400">nos estados que a política realmente visita</strong>: roda-se o clone, e o expert anota a ação correta nesses estados, agregando ao dataset e retreinando. Isso ensina <strong class="text-emerald-400">comportamentos de recuperação</strong>. As demos em si vêm de <strong class="text-emerald-400">teleoperação</strong> — leader-follower, VR ou luvas — cuja qualidade e cobertura definem o teto da política.</p>
+
+      <div class="space-y-6 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+            <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Rodar a política atual</h4>
+            <p class="dark:text-gray-400 light-text-gray-600 text-sm">O clone executa e visita estados próprios, fora da distribuição do expert.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">2</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+            <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Expert rotula esses estados</h4>
+            <p class="dark:text-gray-400 light-text-gray-600 text-sm">O humano indica a ação correta onde o clone erraria.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">3</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+            <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Agregar e retreinar</h4>
+            <p class="dark:text-gray-400 light-text-gray-600 text-sm">O dataset cresce com casos de recuperação; repete-se o ciclo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">DAgger puro é caro (precisa do expert no loop). Na prática, muitos times injetam <strong class="text-primary">perturbações nas demos</strong> (ruído na pose) e gravam recuperações intencionais — DAgger "barato" que melhora robustez sem rotulagem online.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">DAgger</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Agregar rótulos on-policy.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">On-policy correction</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Corrigir nos estados visitados.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Leader-follower</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Teleop por braço mestre.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Cobertura</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Variedade de estados nas demos.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🌀 Multimodalidade das ações: por que MSE falha</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Para um mesmo estado, frequentemente há <strong class="text-emerald-400">várias ações igualmente boas</strong> — contornar um obstáculo pela esquerda ou pela direita. Demonstradores diferentes escolhem caminhos diferentes. Se a política é treinada com <strong class="text-emerald-400">MSE</strong>, ela aprende a <strong class="text-emerald-400">média</strong> dessas ações, que pode cair exatamente no obstáculo (mode averaging). Por isso VLAs modernos usam cabeças <strong class="text-emerald-400">expressivas</strong> — difusão, flow matching ou tokens discretos — capazes de representar distribuições multimodais.</p>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Políticas expressivas</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Difusão/flow capturam múltiplos modos.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Tokens discretos modelam distribuição categórica.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Escolhem um modo coerente, não a média.</span></li>
+          </ul>
+        </div>
+        <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ MSE / regressão unimodal</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Colapsa modos válidos na média.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Média pode ser uma ação inválida.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Trajetórias hesitantes/tremidas.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Multimodal actions</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Vários caminhos válidos.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Mode averaging</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Média que vira ação inválida.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Expressive policy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Difusão/flow/tokens.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Ponte p/ M1.5</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Motiva diffusion policy.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🧹 Qualidade de dados: cobertura e diversidade</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Em imitation learning, <strong class="text-emerald-400">dados &gt; arquitetura</strong>. O que importa não é volume bruto, mas <strong class="text-emerald-400">cobertura</strong> (estados raros e de recuperação representados), <strong class="text-emerald-400">diversidade</strong> (objetos, posições, iluminação, distratores) e consistência. Demos sub-ótimas ou contraditórias confundem a política; demos limpas e variadas generalizam. Um corpus pequeno mas diverso muitas vezes bate um grande mas redundante.</p>
+
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Eixos de qualidade</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>Cobertura</strong> — estados de borda e recuperação presentes.</li>
+          <li><strong>Diversidade</strong> — objetos, fundos, posições e luz variados.</li>
+          <li><strong>Consistência</strong> — estratégia coerente entre demos.</li>
+        </ul>
+      </div>
+
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Antes de coletar mais demos, audite as que tem: remova trajetórias com falhas silenciosas, balanceie objetos e adicione <strong class="text-primary">distratores</strong>. Cobertura intencional rende mais que mil repetições da mesma cena.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Coverage</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Estados representados.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Diversity</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Variação de cenas e objetos.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Demo quality</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ótimas &gt; sub-ótimas.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Distratores</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Objetos extras para robustez.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📏 Métricas: success rate e generalização</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A métrica soberana é o <strong class="text-emerald-400">success rate</strong> — fração de tentativas que completam a tarefa. Mas um número alto em cenas de treino engana. O teste honesto mede <strong class="text-emerald-400">generalização em três eixos</strong>: objetos novos, posições/cenas novas e instruções reformuladas. Avalie sempre com <strong class="text-emerald-400">N tentativas suficientes</strong> e protocolos OOD (out-of-distribution), reportando intervalo de confiança.</p>
+
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Protocolo de avaliação honesto
+seen      = eval(policy, scenes_treino)      # baseline
+ood_obj   = eval(policy, objetos_novos)      # generaliza objeto?
+ood_pos   = eval(policy, posicoes_novas)     # generaliza cena?
+ood_instr = eval(policy, instrucoes_novas)   # generaliza linguagem?
+report(success_rate, n=50, ci=0.95)</code></pre>
+      </div>
+
+      <div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Não confie só no número de treino</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Uma política pode ter 95% in-distribution e 20% OOD. O valor de um VLA está justamente na generalização — meça os três eixos separadamente, ou estará otimizando a métrica errada.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Success rate</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Métrica primária de tarefa.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">OOD eval</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Testar fora da distribuição.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Eixos de generalização</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Objeto · cena · instrução.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Intervalo de confiança</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Reportar variância.</p></div>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br dark:from-emerald-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumo do módulo</h2>
+        <div class="space-y-3 mb-8">
+          <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">BC é o padrão</strong><span class="dark:text-gray-400 light-text-gray-600"> — regressão supervisionada estado→ação, simples e escalável.</span></div></div>
+          <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Distribution shift</strong><span class="dark:text-gray-400 light-text-gray-600"> — erro composto O(εT²) é a falha estrutural do BC.</span></div></div>
+          <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">DAgger e dados</strong><span class="dark:text-gray-400 light-text-gray-600"> — correção on-policy e cobertura/diversidade definem o teto.</span></div></div>
+          <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Multimodalidade</strong><span class="dark:text-gray-400 light-text-gray-600"> — MSE colapsa modos; políticas expressivas resolvem. Meça OOD.</span></div></div>
+        </div>
+        <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-emerald-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">1.5 — Diffusion Policy e Flow Matching: as políticas expressivas que resolvem a multimodalidade.</p></div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-start">
+          <a href="index.html" class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition">← Voltar à trilha</a>
+          <a href="modulo-1-5.html" class="text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition">Próximo módulo →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <a href="../../" class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors">🦾 VLA Mastery</a>
+        <span class="dark:text-gray-600 light-text-gray-400">|</span>
+        <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+      </div>
+      <p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

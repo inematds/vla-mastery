@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeRobot: Framework End-to-End da Hugging Face — VLA Mastery</title>
+  <meta name="description" content="LeRobot: LeRobotDataset (parquet+vídeo), políticas ACT/Diffusion/π0/VQ-BeT, SO-101, teleoperação e deploy no braço real." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <a href="../../" class="flex items-center gap-2">
+            <span class="text-xl">🦾</span>
+            <span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+          </a>
+          <span class="dark:text-gray-600 light-text-gray-400">|</span>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+        </div>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../trilha1/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">Trilha 1</a>
+          <a href="../trilha2/" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10 transition-colors">Trilha 2</a>
+          <a href="../trilha3/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">Trilha 3</a>
+          <button id="theme-toggle" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" aria-label="Alternar tema">
+            <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+        </div>
+        <div class="flex items-center gap-2 md:hidden">
+          <button id="theme-toggle-mobile" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" aria-label="Alternar tema">
+            <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+          <button id="mobile-menu-btn" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4">
+        <div class="flex flex-col gap-3">
+          <a href="../" class="text-sm font-medium dark:text-gray-300 light-text-gray-600">← Mapa do curso</a>
+          <a href="../trilha1/" class="text-sm font-medium text-emerald-400">Trilha 1 — Fundamentos</a>
+          <a href="../trilha2/" class="text-sm font-medium text-blue-400">Trilha 2 — Ferramentas</a>
+          <a href="../trilha3/" class="text-sm font-medium text-purple-400">Trilha 3 — Avançado</a>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400">INEMA.CLUB</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-blue-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto">
+      <a href="index.html" class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-blue-400 mb-4 inline-block">← Voltar à Trilha 2</a>
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4">MÓDULO 2.2</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🤗 LeRobot: Framework End-to-End da Hugging Face</h1>
+      <p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">LeRobot reúne datasets, políticas, simulação e robôs reais num único repositório open. Aqui você entende o LeRobotDataset, treina ACT/Diffusion/π0 e fecha o ciclo gravar → treinar → avaliar → deploy num braço SO-101 de ~$100.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">45</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Inter.</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nível</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Prática</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-10">Conteúdo detalhado</h2>
+
+    <div class="rounded-2xl border border-blue-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-10">
+      <svg role="img" aria-label="Arquitetura LeRobot: Hub de datasets, política e robô real" viewBox="0 0 760 240" class="w-full h-auto" font-family="Inter,sans-serif">
+        <defs>
+          <filter id="m22-glow"><feGaussianBlur stdDeviation="1.8"/></filter>
+          <linearGradient id="m22-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+          <pattern id="m22-dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1.2" fill="#3b82f6" opacity="0.12"/></pattern>
+        </defs>
+        <rect x="0" y="0" width="760" height="240" fill="url(#m22-dots)"/>
+        <text x="380" y="34" fill="#e5e7eb" font-size="16" font-weight="800" text-anchor="middle">Loop LeRobot: gravar ↔ treinar ↔ avaliar</text>
+        <rect x="40" y="90" width="170" height="80" rx="14" fill="#0b0f1a" stroke="#38bdf8" stroke-width="2"/>
+        <text x="125" y="122" fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle">🤗 Hub</text>
+        <text x="125" y="142" fill="#94a3b8" font-size="11" text-anchor="middle">LeRobotDataset</text>
+        <text x="125" y="157" fill="#94a3b8" font-size="11" text-anchor="middle">parquet + mp4</text>
+        <rect x="300" y="90" width="170" height="80" rx="14" fill="#0b0f1a" stroke="#3b82f6" stroke-width="2" filter="url(#m22-glow)"/>
+        <rect x="300" y="90" width="170" height="80" rx="14" fill="none" stroke="#3b82f6" stroke-width="2"/>
+        <text x="385" y="122" fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle">Política</text>
+        <text x="385" y="142" fill="#94a3b8" font-size="11" text-anchor="middle">ACT · Diffusion</text>
+        <text x="385" y="157" fill="#94a3b8" font-size="11" text-anchor="middle">π0 · VQ-BeT</text>
+        <rect x="560" y="90" width="160" height="80" rx="14" fill="#0b0f1a" stroke="#38bdf8" stroke-width="2"/>
+        <text x="640" y="122" fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle">🦾 SO-101</text>
+        <text x="640" y="142" fill="#94a3b8" font-size="11" text-anchor="middle">leader→follower</text>
+        <text x="640" y="157" fill="#94a3b8" font-size="11" text-anchor="middle">teleop / deploy</text>
+        <line x1="210" y1="130" x2="298" y2="130" stroke="url(#m22-grad)" stroke-width="2.5"/><polygon points="298,130 290,126 290,134" fill="#38bdf8"/>
+        <line x1="470" y1="130" x2="558" y2="130" stroke="url(#m22-grad)" stroke-width="2.5"/><polygon points="558,130 550,126 550,134" fill="#38bdf8"/>
+        <path d="M640 170 C640 215, 125 215, 125 172" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 5"/><polygon points="125,172 121,182 129,182" fill="#38bdf8"/>
+        <text x="385" y="208" fill="#94a3b8" font-size="11" text-anchor="middle">novas demos gravadas voltam ao Hub</text>
+      </svg>
+    </div>
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">1</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 O que é LeRobot: a filosofia open end-to-end</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">LeRobot é o esforço da Hugging Face para fazer com a robótica o que o <code class="font-mono text-sm">transformers</code> fez com NLP: <strong class="text-blue-400">democratizar</strong>. Num só repo PyTorch você tem datasets padronizados, políticas SOTA reprodutíveis, ambientes de sim e drivers de hardware barato. O objetivo é eliminar a fragmentação que travava a área.</p>
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Os quatro pilares</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>Datasets</strong> — formato único (<code class="font-mono text-xs">LeRobotDataset</code>) versionado no Hub.</li>
+          <li><strong>Policies</strong> — ACT, Diffusion Policy, π0, VQ-BeT com checkpoints públicos.</li>
+          <li><strong>Sim + envs</strong> — gym wrappers (ALOHA, PushT, Xarm) para avaliar.</li>
+          <li><strong>Hardware</strong> — SO-100/SO-101, Koch, ALOHA com scripts de teleop e gravação.</li>
+        </ul>
+      </div>
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Tudo gira em torno do CLI/entrypoints (<code class="font-mono text-xs">lerobot-record</code>, <code class="font-mono text-xs">lerobot-train</code>, <code class="font-mono text-xs">lerobot-eval</code>). Aprenda os três comandos e você já roda o ciclo completo num braço de mesa.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Open</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Código + pesos públicos.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">End-to-end</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dado → policy → robô.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Hub</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Versionar dados e ckpt.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Acessível</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Hardware de baixo custo.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">2</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 LeRobotDataset: formato parquet + vídeo</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O <strong class="text-blue-400">LeRobotDataset</strong> separa o que é leve do que é pesado: estado, ações e timestamps vão em <strong class="text-blue-400">parquet</strong> (colunar, rápido), enquanto as imagens vivem em <strong class="text-blue-400">mp4</strong> codificado e são decodificadas sob demanda. Cada <em>episódio</em> é uma trajetória; <em>features</em> descrevem shape e dtype de cada chave.</p>
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>from lerobot.common.datasets.lerobot_dataset import LeRobotDataset
+
+ds = LeRobotDataset("lerobot/svla_so101_pickplace")
+print(ds.features.keys())
+# observation.images.top, observation.state, action, timestamp, ...
+
+sample = ds[0]
+sample["observation.images.top"].shape   # (3, H, W) tensor já decodificado
+sample["action"].shape                    # (action_dim,)
+
+# delta_timestamps -> janelas temporais (chunking) automáticas
+ds = LeRobotDataset(repo_id, delta_timestamps={"action": [t/30 for t in range(16)]})</code></pre>
+      </div>
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Anatomia de um episódio</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>observation.images.*</strong> — uma chave por câmera (top, wrist), em mp4.</li>
+          <li><strong>observation.state</strong> — posições de junta / pose do gripper.</li>
+          <li><strong>action</strong> — comando alvo do próximo passo.</li>
+          <li><strong>episode_index / frame_index</strong> — fronteiras de trajetória.</li>
+        </ul>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">parquet</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Estado/ação colunar.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">mp4</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Imagens decode lazy.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">features</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Schema shape+dtype.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">delta_timestamps</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Janelas temporais.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">3</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Políticas prontas: ACT, Diffusion, π0, VQ-BeT</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">LeRobot empacota políticas de classes distintas com a mesma interface. <strong class="text-blue-400">ACT</strong> (Action Chunking Transformer, do ALOHA) é o cavalo de batalha para manipulação com poucas demos; <strong class="text-blue-400">Diffusion Policy</strong> captura multimodalidade; <strong class="text-blue-400">π0</strong> traz flow matching generalista; <strong class="text-blue-400">VQ-BeT</strong> usa tokens vetoriais quantizados.</p>
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># treinar ACT no dataset do SO-101
+lerobot-train \
+  --policy.type=act \
+  --dataset.repo_id=lerobot/svla_so101_pickplace \
+  --batch_size=8 --steps=100000 \
+  --output_dir=outputs/act_so101 \
+  --policy.device=cuda --wandb.enable=true
+
+# trocar para diffusion: --policy.type=diffusion
+# fine-tune do π0: --policy.type=pi0 --policy.pretrained_path=lerobot/pi0</code></pre>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Começar com ACT: poucos hparams, treina rápido, ótimo baseline.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Usar π0 pré-treinado quando precisar de generalização semântica.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Casar o chunk size da policy com a frequência do robô.</span></li>
+          </ul>
+        </div>
+        <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Diffusion Policy com 10 demos e esperar convergência.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Trocar de policy sem re-conferir normalização de ações.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Treinar π0 do zero sem GPU robusta — parta do checkpoint.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">ACT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Chunking transformer + VAE.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Diffusion</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Denoising de trajetória.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">π0</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Flow matching generalista.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">VQ-BeT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Tokens quantizados.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">4</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Hardware suportado: SO-101, Koch, ALOHA</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O <strong class="text-blue-400">SO-101</strong> (sucessor do SO-100, projeto The Robot Studio + Hugging Face) é o braço-referência: ~6 DOF, servos Feetech, custo na casa dos $100–150. A coleta usa esquema <strong class="text-blue-400">leader-follower</strong> — você move um braço "líder" e o "seguidor" replica, gravando estado+ação sincronizados com a câmera.</p>
+      <div class="space-y-6 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+            <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Montar e calibrar</h4>
+            <p class="dark:text-gray-400 light-text-gray-600 text-sm">Identificar portas dos motores, rodar <code class="font-mono text-xs">lerobot-calibrate</code> para mapear faixa de cada junta.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">2</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+            <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Teleoperar</h4>
+            <p class="dark:text-gray-400 light-text-gray-600 text-sm">Leader move, follower copia. Câmeras (top + wrist) registram a cena em tempo real.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">3</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+            <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Gravar episódios</h4>
+            <p class="dark:text-gray-400 light-text-gray-600 text-sm">30–50 demos costumam bastar para ACT numa tarefa pick-and-place simples.</p>
+          </div>
+        </div>
+      </div>
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Consistência &gt; quantidade. Demos limpas, mesma iluminação e variação proposital de posição do objeto ensinam generalização melhor do que 200 episódios bagunçados.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">SO-101</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Braço ~$100, 6 DOF.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Leader-follower</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Teleop por cópia.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Calibração</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mapear faixa das juntas.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">ALOHA</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Bimanual de referência.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">5</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Fluxo: gravar → treinar → avaliar → deploy</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O ciclo completo são três comandos e um loop de inferência. Você grava demos, treina uma policy, avalia no robô (ou em sim) e faz <em>deploy</em> rodando a policy em malha fechada a ~30 Hz.</p>
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># 1) gravar 50 demos no SO-101
+lerobot-record \
+  --robot.type=so101_follower --robot.port=/dev/ttyACM0 \
+  --teleop.type=so101_leader --teleop.port=/dev/ttyACM1 \
+  --dataset.repo_id=eu/so101_pegar_cubo --dataset.num_episodes=50
+
+# 2) treinar
+lerobot-train --policy.type=act --dataset.repo_id=eu/so101_pegar_cubo --steps=80000
+
+# 3) avaliar/deploy: rodar a policy no follower
+lerobot-record --policy.path=outputs/act/checkpoints/last \
+  --robot.type=so101_follower --dataset.num_episodes=10  # eval rollouts</code></pre>
+      </div>
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Sinais de saúde do treino</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>loss caindo</strong> mas success rate parado → problema de normalização/câmera.</li>
+          <li><strong>overfit</strong> a poucas demos → aumente diversidade, não só steps.</li>
+          <li><strong>success em sim, falha real</strong> → gap sim-real (Trilha 3).</li>
+        </ul>
+      </div>
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Avalie sempre com o robô <strong>na mesma configuração</strong> da gravação (iluminação, posição das câmeras, fundo). Mudar a cena entre treino e deploy é a causa nº 1 de uma policy que "funcionava ontem" falhar hoje — e não é bug, é distribution shift.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">record</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Coleta de demos.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">train</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Treina a policy.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">eval rollout</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mede success rate.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">deploy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Malha fechada 30 Hz.</p></div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mt-6">
+        <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Avaliar com rollouts no robô, não só a loss de treino.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Logar vídeo dos rollouts para diagnosticar falhas.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Versionar dataset + config + checkpoint juntos.</span></li>
+          </ul>
+        </div>
+        <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Aumentar steps quando o problema é falta de diversidade.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Confiar só em loss caindo como sinal de sucesso.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Mudar a cena entre gravação e deploy.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">6</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Comunidade e reprodutibilidade</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O valor de LeRobot escala com a comunidade: milhares de datasets e checkpoints públicos no <strong class="text-blue-400">Hub</strong>, cada um versionado e com card descritivo. Você reproduz um paper baixando o dataset exato e o config, e contribui publicando suas demos do SO-101 para outros treinarem.</p>
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># publicar seu dataset no Hub
+huggingface-cli login
+lerobot-record ... --dataset.push_to_hub=true --dataset.repo_id=eu/minha_tarefa
+
+# visualizar qualquer dataset no navegador
+# https://huggingface.co/spaces/lerobot/visualize_dataset</code></pre>
+      </div>
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Antes de gravar do zero, busque no Hub: pode existir um dataset SO-101 da sua tarefa. Co-treinar com dados públicos + suas demos melhora generalização — a deixa perfeita para o módulo de datasets (2.6).</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Hub</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Datasets + checkpoints.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Reprodutível</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mesmo dado + config.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">push_to_hub</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Contribuir demos.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">visualize</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Inspeção no browser.</p></div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <div class="bg-gradient-to-br dark:from-blue-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumo do módulo</h2>
+        <div class="space-y-3 mb-8">
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">LeRobot unifica</strong><span class="dark:text-gray-400 light-text-gray-600"> — dados, políticas, sim e hardware num só repo open.</span></div></div>
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">LeRobotDataset</strong><span class="dark:text-gray-400 light-text-gray-600"> — parquet para estado/ação, mp4 para imagem, features tipadas.</span></div></div>
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">ACT como baseline</strong><span class="dark:text-gray-400 light-text-gray-600"> — depois Diffusion/π0/VQ-BeT conforme a tarefa.</span></div></div>
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Ciclo de 3 comandos</strong><span class="dark:text-gray-400 light-text-gray-600"> — record, train, eval/deploy no SO-101.</span></div></div>
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Hub = reprodutibilidade</strong><span class="dark:text-gray-400 light-text-gray-600"> — reuse e contribua datasets.</span></div></div>
+        </div>
+        <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">2.3 — Simuladores: MuJoCo/MJX, Isaac Sim/Lab e Habitat, onde geramos dados baratos e seguros em escala.</p></div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-start">
+          <a href="index.html" class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition">← Voltar à trilha</a>
+          <a href="modulo-2-3.html" class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition">Próximo módulo →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <a href="../../" class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors">🦾 VLA Mastery</a>
+        <span class="dark:text-gray-600 light-text-gray-400">|</span>
+        <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+      </div>
+      <p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>

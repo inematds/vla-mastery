@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simuladores: MuJoCo, Isaac Sim, Habitat — VLA Mastery</title>
+  <meta name="description" content="Simulação para VLA: MuJoCo/MJX, Isaac Sim/Isaac Lab GPU-paralelo, Habitat, o gap sim-real e benchmarks LIBERO/Meta-World." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+        colors: {
+          primary: '#FACC15',
+          dark: { 600:'#374151', 700:'#1f2937', 800:'#1a1f2e', 900:'#111827', 950:'#0b0f1a' },
+        },
+      }},
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    .nav-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .dark body { background-color: #111827; color: #e5e7eb; }
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    html:not(.dark) body { background-color: #f8fafc; color: #111827; }
+    html:not(.dark) .light-bg-white { background-color: #ffffff; }
+    html:not(.dark) .light-bg-gray-50 { background-color: #f9fafb; }
+    html:not(.dark) .light-bg-gray-100 { background-color: #f3f4f6; }
+    html:not(.dark) .light-text-gray-900 { color: #111827; }
+    html:not(.dark) .light-text-gray-700 { color: #374151; }
+    html:not(.dark) .light-text-gray-600 { color: #4b5563; }
+    html:not(.dark) .light-text-gray-500 { color: #6b7280; }
+    html:not(.dark) .light-border-gray-200 { border-color: #e5e7eb; }
+    html:not(.dark) .light-border-gray-300 { border-color: #d1d5db; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @media (prefers-reduced-motion: reduce) {
+      svg[role="img"] * { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <nav class="nav-blur fixed top-0 left-0 right-0 z-50 border-b border-dark-600 light-border-gray-200 dark:bg-dark-900/80 bg-white/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <a href="../../" class="flex items-center gap-2">
+            <span class="text-xl">🦾</span>
+            <span class="text-lg font-bold dark:text-white light-text-gray-900 hidden sm:inline">VLA Mastery</span>
+          </a>
+          <span class="dark:text-gray-600 light-text-gray-400">|</span>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+        </div>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../trilha1/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">Trilha 1</a>
+          <a href="../trilha2/" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10 transition-colors">Trilha 2</a>
+          <a href="../trilha3/" class="px-3 py-1.5 rounded-lg text-sm font-semibold dark:text-gray-300 light-text-gray-600 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">Trilha 3</a>
+          <button id="theme-toggle" class="ml-2 p-2 rounded-lg dark:text-gray-400 light-text-gray-500 hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors" aria-label="Alternar tema">
+            <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+        </div>
+        <div class="flex items-center gap-2 md:hidden">
+          <button id="theme-toggle-mobile" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500" aria-label="Alternar tema">
+            <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+            <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+          </button>
+          <button id="mobile-menu-btn" class="p-2 rounded-lg dark:text-gray-400 light-text-gray-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-dark-600 light-border-gray-200 mt-2 pt-4">
+        <div class="flex flex-col gap-3">
+          <a href="../" class="text-sm font-medium dark:text-gray-300 light-text-gray-600">← Mapa do curso</a>
+          <a href="../trilha1/" class="text-sm font-medium text-emerald-400">Trilha 1 — Fundamentos</a>
+          <a href="../trilha2/" class="text-sm font-medium text-blue-400">Trilha 2 — Ferramentas</a>
+          <a href="../trilha3/" class="text-sm font-medium text-purple-400">Trilha 3 — Avançado</a>
+          <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm font-medium text-sky-400">INEMA.CLUB</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br dark:from-blue-900/30 dark:via-dark-900 dark:to-dark-900 border-b border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto">
+      <a href="index.html" class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-blue-400 mb-4 inline-block">← Voltar à Trilha 2</a>
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4">MÓDULO 2.3</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🌐 Simuladores: MuJoCo, Isaac Sim, Habitat</h1>
+      <p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Dados reais são caros e perigosos; simulação é barata, segura e paralelizável em milhares de ambientes. Aqui você compara MuJoCo/MJX, Isaac Sim/Lab e Habitat, entende o gap sim-real e mede generalização em LIBERO e Meta-World.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">45</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Inter.</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Nível</div></div>
+        <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">Prática</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-10">Conteúdo detalhado</h2>
+
+    <div class="rounded-2xl border border-blue-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-10">
+      <svg role="img" aria-label="Ambientes de simulação paralelos alimentando uma política compartilhada" viewBox="0 0 760 250" class="w-full h-auto" font-family="Inter,sans-serif">
+        <defs>
+          <filter id="m23-glow"><feGaussianBlur stdDeviation="1.8"/></filter>
+          <linearGradient id="m23-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+          <pattern id="m23-dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1.2" fill="#3b82f6" opacity="0.12"/></pattern>
+        </defs>
+        <rect x="0" y="0" width="760" height="250" fill="url(#m23-dots)"/>
+        <text x="380" y="32" fill="#e5e7eb" font-size="16" font-weight="800" text-anchor="middle">N envs paralelos na GPU → uma política</text>
+        <g>
+          <rect x="40" y="60" width="120" height="40" rx="9" fill="#0b0f1a" stroke="#38bdf8" stroke-width="2"/><text x="100" y="85" fill="#94a3b8" font-size="12" text-anchor="middle">env 1</text>
+          <rect x="40" y="110" width="120" height="40" rx="9" fill="#0b0f1a" stroke="#38bdf8" stroke-width="2"/><text x="100" y="135" fill="#94a3b8" font-size="12" text-anchor="middle">env 2</text>
+          <rect x="40" y="160" width="120" height="40" rx="9" fill="#0b0f1a" stroke="#38bdf8" stroke-width="2"/><text x="100" y="185" fill="#94a3b8" font-size="12" text-anchor="middle">env 3</text>
+          <text x="100" y="225" fill="#94a3b8" font-size="12" text-anchor="middle">… env N</text>
+        </g>
+        <rect x="320" y="95" width="160" height="70" rx="14" fill="#0b0f1a" stroke="#3b82f6" stroke-width="2" filter="url(#m23-glow)"/>
+        <rect x="320" y="95" width="160" height="70" rx="14" fill="none" stroke="#3b82f6" stroke-width="2"/>
+        <text x="400" y="125" fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle">Política</text>
+        <text x="400" y="145" fill="#94a3b8" font-size="11" text-anchor="middle">batched rollout</text>
+        <g stroke="url(#m23-grad)" stroke-width="2">
+          <line x1="160" y1="80" x2="318" y2="120"/><line x1="160" y1="130" x2="318" y2="130"/><line x1="160" y1="180" x2="318" y2="140"/>
+        </g>
+        <rect x="600" y="95" width="130" height="70" rx="14" fill="#0b0f1a" stroke="#38bdf8" stroke-width="2"/>
+        <text x="665" y="125" fill="#38bdf8" font-size="13" font-weight="700" text-anchor="middle">Update</text>
+        <text x="665" y="145" fill="#94a3b8" font-size="11" text-anchor="middle">grad / RL</text>
+        <line x1="480" y1="130" x2="598" y2="130" stroke="url(#m23-grad)" stroke-width="2.5"/><polygon points="598,130 590,126 590,134" fill="#38bdf8"/>
+        <path d="M665 165 C665 215, 400 215, 400 167" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 5"/><polygon points="400,167 396,177 404,177" fill="#38bdf8"/>
+      </svg>
+    </div>
+
+    <!-- TÓPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">1</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Por que simular: barato, seguro, paralelo, reset infinito</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Cada demo real exige um humano, um robô e tempo de relógio. Em simulação, um cluster gera <strong class="text-blue-400">milhões de trajetórias</strong> de madrugada, sem desgaste mecânico nem colisões caras. Crucial para RL, que precisa de ordens de magnitude mais interações do que imitação.</p>
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 As quatro vantagens</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>Custo</strong> — sem hardware desgastando, sem operador humano por trajetória.</li>
+          <li><strong>Segurança</strong> — políticas ruins quebram pixels, não atuadores.</li>
+          <li><strong>Paralelismo</strong> — milhares de envs simultâneos na GPU.</li>
+          <li><strong>Reset infinito</strong> — ground-truth de estado, randomização programática, replay.</li>
+        </ul>
+      </div>
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Sim não substitui o real — complementa. A receita vencedora é <strong>sim para volume + RL</strong> e <strong>real para fine-tuning final</strong> com poucas demos. Tentar transferir 100% do sim sem dado real costuma frustrar.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Custo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dados quase grátis.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Segurança</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Falha sem dano físico.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Paralelismo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Milhares de envs.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Ground truth</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Estado exato disponível.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">2</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 MuJoCo / MJX: contato preciso e física diferenciável</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">MuJoCo</strong> (Multi-Joint dynamics with Contact, hoje open-source pela DeepMind) é referência em física de contato e atrito para manipulação. <strong class="text-blue-400">MJX</strong> reimplementa o solver em <strong class="text-blue-400">JAX</strong>, rodando milhares de simulações em GPU/TPU com <code class="font-mono text-sm">vmap</code> e gradientes via <code class="font-mono text-sm">grad</code> — abrindo otimização diferenciável de trajetória.</p>
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>pip install mujoco mujoco-mjx jax[cuda12]
+
+import mujoco, mujoco.mjx as mjx, jax
+model = mujoco.MjModel.from_xml_path("scene.xml")   # MJCF
+mx = mjx.put_model(model)
+
+@jax.vmap                       # 4096 mundos em paralelo
+def step(state, ctrl):
+    data = mjx.step(mx, state.replace(ctrl=ctrl))
+    return data
+# jax.grad(step) -> física diferenciável</code></pre>
+      </div>
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Cenas em MuJoCo são <strong>MJCF</strong> (XML). Comece com os modelos do <code class="font-mono text-xs">mujoco_menagerie</code> (Franka, ALOHA, mãos) em vez de modelar do zero — geometria de colisão errada é a causa nº 1 de física instável.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">MuJoCo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Contato preciso.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">MJX</p><p class="text-xs dark:text-gray-400 light-text-gray-600">JAX, vmap em GPU.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Diferenciável</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Gradiente da dinâmica.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">MJCF</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Cena em XML.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">3</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 NVIDIA Isaac Sim / Isaac Lab: GPU sim com RTX</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">Isaac Sim</strong> (sobre Omniverse/PhysX 5) entrega física e renderização <strong class="text-blue-400">RTX</strong> na GPU; <strong class="text-blue-400">Isaac Lab</strong> é o framework de RL/aprendizado em cima dele, rodando milhares de ambientes paralelos sem sair da GPU — observações, física e política convivem na mesma VRAM, eliminando o gargalo CPU↔GPU.</p>
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por que escala</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>PhysX 5 na GPU</strong> — milhares de envs, sem ida-e-volta para a CPU.</li>
+          <li><strong>RTX</strong> — renderização fotorrealista útil para sim-to-real visual.</li>
+          <li><strong>USD/OpenUSD</strong> — formato de cena interoperável e modular.</li>
+          <li><strong>Sensores</strong> — câmeras, LiDAR e RGB-D sintéticos prontos.</li>
+        </ul>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Usar Isaac Lab para RL massivo (locomoção, whole-body).</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Aproveitar RTX para domain randomization visual.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Conferir requisitos de GPU NVIDIA + drivers antes de começar.</span></li>
+          </ul>
+        </div>
+        <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Esperar rodar Isaac Sim em hardware não-NVIDIA.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Confundir fotorrealismo com fidelidade física.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Ignorar o custo de setup; MuJoCo é mais leve para protótipo.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Isaac Sim</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Omniverse + PhysX 5.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Isaac Lab</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Framework de RL.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">RTX</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Render fotorrealista.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">OpenUSD</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Cena interoperável.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">4</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Habitat e cia: navegação e embodied QA</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">Habitat</strong> (Meta) foca em ambientes 3D fotorrealistas para <strong class="text-blue-400">navegação</strong> e <strong class="text-blue-400">embodied question answering</strong> — o agente se move por cenas escaneadas (HM3D, Matterport) respondendo "onde está a chave?". É outro ponto do espectro: menos manipulação de contato, mais percepção espacial e exploração.</p>
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Espectro de simuladores</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>MuJoCo</strong> — contato/manipulação, física fina.</li>
+          <li><strong>Isaac Sim</strong> — escala + RTX, locomoção e manipulação.</li>
+          <li><strong>Habitat</strong> — navegação, EQA, cenas reais escaneadas.</li>
+          <li><strong>Genesis / SAPIEN</strong> — novas opções 2024-26, velocidade e articulados.</li>
+        </ul>
+      </div>
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>import habitat_sim
+cfg = habitat_sim.SimulatorConfiguration()
+cfg.scene_id = "data/scene_datasets/hm3d/00800-TEEsavR23oF.glb"
+sim = habitat_sim.Simulator(habitat_sim.Configuration(cfg, [agent_cfg]))
+obs = sim.step("move_forward")   # navegação em cena escaneada real
+obs["rgb"], obs["depth"]         # sensores sintéticos</code></pre>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Habitat</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Navegação 3D.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">EQA</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Perguntas incorporadas.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">HM3D</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Cenas escaneadas.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">SAPIEN</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Objetos articulados.</p></div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">5</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 O gap de física e renderização (sim ≠ real)</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Nenhum simulador é o mundo. O <strong class="text-blue-400">reality gap</strong> aparece em atrito mal modelado, objetos deformáveis e líquidos, ruído e latência de sensores, e domínio visual (iluminação, texturas). Uma policy que acerta 95% em sim pode despencar no real — tema central da Trilha 3.</p>
+      <div class="space-y-6 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+            <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Física</h4>
+            <p class="dark:text-gray-400 light-text-gray-600 text-sm">Atrito, contato, deformáveis e fluidos são aproximações; rígidos são fáceis, panos não.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">2</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+            <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Sensores</h4>
+            <p class="dark:text-gray-400 light-text-gray-600 text-sm">RGB-D real tem ruído, buracos e latência que o render perfeito ignora.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">3</div>
+          <div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200">
+            <h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Aparência</h4>
+            <p class="dark:text-gray-400 light-text-gray-600 text-sm">Distribuição visual difere; domain randomization mitiga (Trilha 3).</p>
+          </div>
+        </div>
+      </div>
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Avalie no real (ou em sim diferente do de treino). Reportar só success rate em sim de treino é a forma mais comum de se enganar sobre uma policy.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Reality gap</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sim ≠ real.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Deformáveis</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Pano/fluido difíceis.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Ruído de sensor</p><p class="text-xs dark:text-gray-400 light-text-gray-600">RGB-D imperfeito.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Eval honesto</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Medir transfer real.</p></div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mt-6">
+        <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Fazer</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Randomizar física/visual no treino para fechar o gap.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Reservar um sim/cenário de avaliação separado do de treino.</span></li>
+            <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Validar no robô real antes de declarar sucesso.</span></li>
+          </ul>
+        </div>
+        <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Evitar</h4>
+          <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Reportar success rate só no sim de treino.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Modelar deformáveis/fluidos como rígidos e confiar.</span></li>
+            <li class="flex gap-2"><span class="text-red-400">✗</span><span>Ignorar ruído/latência de sensor real no pipeline.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÓPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">6</span>
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Benchmarks: LIBERO, Meta-World, RoboSuite</h2>
+      </div>
+      <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Benchmarks padronizam a comparação. <strong class="text-blue-400">LIBERO</strong> mede aprendizado contínuo e transferência de conhecimento em manipulação (LIBERO-Spatial, Object, Goal, Long); <strong class="text-blue-400">Meta-World</strong> oferece 50 tarefas para meta/multi-task RL; <strong class="text-blue-400">RoboSuite</strong> (MuJoCo) é uma suíte modular de manipulação muito usada em papers VLA.</p>
+      <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
+        <p class="dark:text-gray-300 light-text-gray-700">Reporte o benchmark <strong>completo</strong>, não só a suite onde seu modelo brilha. Cherry-picking de uma única suite LIBERO é o "p-hacking" da robótica — revisores e a comunidade esperam todas as quatro suites mais a média.</p>
+      </div>
+      <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
+        <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># avaliar OpenVLA fine-tunado em LIBERO (suites padrão)
+python run_libero_eval.py \
+  --model_path outputs/openvla-libero \
+  --task_suite_name libero_spatial \
+  --num_trials_per_task 50
+# reporta success rate médio por suite -> número comparável entre papers</code></pre>
+      </div>
+      <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 O que cada um mede</h3>
+        <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
+          <li><strong>LIBERO</strong> — lifelong learning, 4 suites de transferência.</li>
+          <li><strong>Meta-World</strong> — 50 tarefas, ML1/ML10/ML45 para generalização.</li>
+          <li><strong>RoboSuite</strong> — manipulação modular, base de muitos VLAs.</li>
+        </ul>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">LIBERO</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Lifelong / transferência.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Meta-World</p><p class="text-xs dark:text-gray-400 light-text-gray-600">50 tarefas multi-task.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">RoboSuite</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Manipulação modular.</p></div>
+        <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Success rate</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Métrica comparável.</p></div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <div class="bg-gradient-to-br dark:from-blue-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumo do módulo</h2>
+        <div class="space-y-3 mb-8">
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Simular</strong><span class="dark:text-gray-400 light-text-gray-600"> — barato, seguro, paralelo e com reset infinito.</span></div></div>
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">MuJoCo/MJX</strong><span class="dark:text-gray-400 light-text-gray-600"> — contato preciso e física diferenciável em JAX.</span></div></div>
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Isaac Sim/Lab</strong><span class="dark:text-gray-400 light-text-gray-600"> — escala GPU e RTX para RL massivo.</span></div></div>
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Reality gap</strong><span class="dark:text-gray-400 light-text-gray-600"> — sim ≠ real; avalie honestamente.</span></div></div>
+          <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Benchmarks</strong><span class="dark:text-gray-400 light-text-gray-600"> — LIBERO, Meta-World, RoboSuite comparam policies.</span></div></div>
+        </div>
+        <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">2.4 — ROS2: o middleware que leva sua policy do simulador ao braço real, com tf2, MoveIt2 e tempo real.</p></div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-start">
+          <a href="index.html" class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition">← Voltar à trilha</a>
+          <a href="modulo-2-4.html" class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition">Próximo módulo →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-600 light-border-gray-200">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <a href="../../" class="font-bold dark:text-white light-text-gray-900 hover:text-emerald-400 transition-colors">🦾 VLA Mastery</a>
+        <span class="dark:text-gray-600 light-text-gray-400">|</span>
+        <a href="https://inema.club" target="_blank" rel="noopener" class="text-sm text-sky-400 hover:text-sky-300 transition-colors">INEMA.CLUB</a>
+      </div>
+      <p class="text-sm dark:text-gray-500 light-text-gray-500">2026 INEMA. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const html = document.documentElement;
+      const storageKey = 'vla-mastery-theme';
+      function setTheme(m){ if(m==='light'){html.classList.remove('dark');}else{html.classList.add('dark');} try{localStorage.setItem(storageKey,m);}catch{} }
+      let stored=null; try{stored=localStorage.getItem(storageKey);}catch{}
+      setTheme(stored==='light'?'light':'dark');
+      function toggle(){ setTheme(html.classList.contains('dark')?'light':'dark'); }
+      const t1=document.getElementById('theme-toggle'); if(t1)t1.addEventListener('click',toggle);
+      const t2=document.getElementById('theme-toggle-mobile'); if(t2)t2.addEventListener('click',toggle);
+      const mb=document.getElementById('mobile-menu-btn'); if(mb)mb.addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    })();
+    function toggleTopic(button){
+      const item=button.closest('.topic-item');
+      const exp=item.querySelector('.topic-explanation');
+      const card=button.closest('[data-module-card]')||document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e=>{ if(e!==exp)e.classList.remove('active'); });
+      exp.classList.toggle('active');
+    }
+    function openModal(id){ const m=document.getElementById(id); if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';} }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; }
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  </script>
+</body>
+</html>
