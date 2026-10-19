@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Módulo 3.2 — Humanoides — VLA Mastery</title>
-<meta content="Humanoides y VLA: por qué la forma humana, NVIDIA GR00T N1/N1.5, Figure Helix System 1/2, Tesla Optimus, Unitree G1/H1 y control de cuerpo completo." name="description"/>
+<meta content="Humanoides y VLA: por qué la forma humana, NVIDIA GR00T N1.7/N2, Figure Helix 02/2.5 (System 0/1/2), Tesla Optimus, Unitree G1/H1/R1 y whole-body control (oct/2026)." name="description"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -147,7 +147,7 @@
 <text fill="#7dd3fc" font-size="12" text-anchor="middle" x="125" y="56">política rápida · ~200 Hz</text>
 <circle cx="125" cy="118" fill="#38bdf8" filter="url(#m32-glow)" opacity="0.4" r="34"></circle>
 <text fill="#e0f2fe" font-size="11" text-anchor="middle" x="125" y="122">control motor</text>
-<text fill="#7dd3fc" font-size="10" text-anchor="middle" x="125" y="166">manos · torso · articulaciones</text>
+<text fill="#7dd3fc" font-size="10" text-anchor="middle" x="125" y="166">Helix 02 (ene/2026): + S0 a 1 kHz</text>
 </g>
 </svg>
 </div>
@@ -160,12 +160,12 @@
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La tesis del humanoide es simple y poderosa: <strong class="text-purple-400">el mundo ya fue construido para la forma humana</strong>. Las perillas, las escaleras, las herramientas, las mesadas y los vehículos presuponen dos manos, dos pies y una altura humana. Un robot humanoide opera en este inventario mundial de infraestructura: <em>brownfield</em> — sin reformarlo, a diferencia de los brazos fijos que requieren celdas dedicadas.</p>
 <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 La apuesta de fondo</h3>
-<p class="dark:text-gray-300 light-text-gray-700">Generalidad de <strong>forma</strong> (humanoide) × generalidad de <strong>cerebro</strong> (foundation model VLA) = un único producto que aborda incontables tareas. Es la convergencia que impulsa decenas de miles de millones en capital hacia el sector desde 2024.</p>
+<p class="dark:text-gray-300 light-text-gray-700">Generalidad de <strong>forma</strong> (humanoide) × generalidad de <strong>cerebro</strong> (foundation model VLA) = un único producto que atiende incontables tareas. Es la convergencia que mueve rondas millonarias hacia el sector; por ejemplo, Figure fue valorada en US$ 39 mil millones en la Serie C (sep/2025) y Unitree salió a bolsa en Shanghái a ~US$ 9 mil millones (ago/2026, según CNBC). Detalles en el M3.5.</p>
 </div>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por qué la forma humana es difícil — y vale la pena</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>~30-50 DOF</strong> — un humanoide tiene un orden de magnitud más grados de libertad que un brazo, por lo que requiere whole-body control.</li>
+<li><strong>Decenas de DOF</strong> — un humanoide tiene muchos más grados de libertad que un brazo de 6–7 ejes (el Atlas eléctrico de producción, mostrado en CES en ene/2026, tiene 56), lo que exige whole-body control.</li>
 <li><strong>Equilibrio dinámico</strong> — un bípedo es inestable por naturaleza; manipular mientras camina es la prueba real de utilidad.</li>
 <li><strong>TAM gigantesco</strong> — el argumento económico es abordar el trabajo físico genérico, no una sola estación.</li>
 </ul>
@@ -181,22 +181,23 @@
 <section class="mb-16" id="topico-2">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">2</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🟢 NVIDIA GR00T (N1/N1.5): foundation model dual</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🟢 NVIDIA GR00T (N1 → N1.7 → N2): foundation model dual</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">GR00T</strong> es el foundation model abierto de NVIDIA para humanoides. El <strong>N1</strong> inauguró un modelo de fundación cross-embodiment con <strong>sistema dual</strong> — un módulo de razonamiento lento (System 2, basado en VLM) y un módulo de acción rápido (System 1, basado en difusión). El <strong>N1.5</strong> perfeccionó el seguimiento de instrucciones y la generalización. NVIDIA combina esto con el pipeline Isaac GR00T + Cosmos para generar datos sintéticos y trayectorias neuronales a gran escala.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">GR00T</strong> es el foundation model abierto de NVIDIA para humanoides. El <strong>N1</strong> (mar/2025) inauguró un modelo de fundación cross-embodiment con <strong>sistema dual</strong> — un módulo de razonamiento lento (System 2, basado en VLM) y un módulo de acción rápido (System 1, un DiT de acción). N1.5 y N1.6 (fines de 2025, DiT de 32 capas) vinieron después. En oct/2026 la versión actual es el <strong>GR00T N1.7</strong>: VLA de "razonamiento" con <strong>3B</strong> parámetros, arquitectura "Action Cascade" (S2 = Cosmos-Reason2-2B, S1 = DiT de 32 capas), en General Availability desde abr/2026, con código Apache-2.0 y pesos bajo la <strong>NVIDIA Open Model License</strong> (uso comercial permitido). Validado en Unitree G1, YAM y AGIBot Genie 1, e integrado a LeRobot (<code>--policy.type=groot</code>). O <strong>GR00T N2</strong> se mostró en vista previa en la GTC (mar/2026) como <em>World Action Model</em> (base DreamZero) y está previsto para fines de 2026: hasta oct/2026 no se había lanzado.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>GR00T N1 — pilha de dados (pirâmide)
-  topo:  poucas demos reais (teleoperação)      ← fidelidade
-  meio:  dados sintéticos (Isaac/Cosmos)        ← escala física
-  base:  vídeo humano web + neural trajectories ← semântica / amplitude
-=&gt; cross-embodiment: 1 modelo treinado para muitos corpos</code></pre>
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>GR00T — pilha de dados (pirâmide)
+  topo:  poucas demos reais (teleoperação)        ← fidelidade
+  meio:  dados sintéticos (Isaac/Cosmos)          ← escala física
+  base:  vídeo humano egocêntrico + neural traj.  ← semântica / amplitude
+=&gt; cross-embodiment: 1 modelo treinado para muitos corpos
+# N1.7 (abr/2026): "20,000+ hours of human egocentric video", segundo o blog NVIDIA/HF</code></pre>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Por qué importa estratégicamente</h3>
-<p class="dark:text-gray-300 light-text-gray-700">NVIDIA no fabrica humanoides: proporciona el <strong>cerebro + la fábrica de datos + el silicio</strong>. Varios OEMs (1X, Agility, Boston Dynamics, Unitree y otros) adoptan GR00T/Isaac, lo que posiciona a NVIDIA como la capa horizontal del ecosistema, de forma análoga a lo que CUDA fue para el deep learning.</p>
+<p class="dark:text-gray-300 light-text-gray-700">NVIDIA no fabrica humanoides: proporciona el <strong>cerebro + la fábrica de datos + el silicio</strong>: GR00T, Cosmos 3 (world model abierto, may/2026), Isaac Sim/Lab y Jetson Thor. En la GTC de mar/2026 anunció la integración de Isaac y GR00T con LeRobot de Hugging Face. Eso la posiciona como capa horizontal del ecosistema, análoga a lo que CUDA fue para el deep learning — pero los humanoides de punta (Figure, Tesla, 1X) siguen con cerebros propios y cerrados.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">GR00T N1/N1.5</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Foundation abierto para humanoides.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">GR00T N1.7</p><p class="text-xs dark:text-gray-400 light-text-gray-600">3B, pesos abiertos (abr/2026).</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Sistema dual</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Razonamiento + acción.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cosmos / Isaac</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Datos sintéticos a gran escala.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cross-embodiment</p><p class="text-xs dark:text-gray-400 light-text-gray-600">1 modelo, muchos cuerpos.</p></div>
@@ -206,9 +207,9 @@
 <section class="mb-16" id="topico-3">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔵 Figure Helix: VLA jerárquico (System 1/2)</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔵 Figure Helix: VLA jerárquico (System 0/1/2)</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Helix</strong>, de Figure, es un VLA jerárquico que se ejecutó onboard en un humanoide. El <strong>System 2</strong> (VLM de internet, ~7-9 Hz) entiende la escena y la instrucción, y emite un <em>vector latente</em>; o <strong>System 1</strong> (política visuomotora, ~200 Hz) decodifica este latente en el control continuo del torso, la cabeza y <strong>manos hábiles</strong>. Fue uno de los primeros en controlar todo el tronco superior de un humanoide con un único VLA, y en operar dos robots que colaboran con un mismo modelo.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Helix</strong> (feb/2025), de Figure, es un VLA jerárquico que corre onboard en un humanoide. En la primera versión, el <strong>System 2</strong> (VLM abierto, ~7-9 Hz) entiende la escena y la instrucción y emite un <em>vector latente</em>; o <strong>System 1</strong> (política visuomotora, ~200 Hz) decodifica este latente en el control continuo del torso, la cabeza y <strong>manos hábiles</strong> — solo el torso superior. El <strong>Helix 02</strong> (ene/2026) pasó al <strong>cuerpo completo</strong> y ganó un <strong>System 0</strong>: un controlador aprendido a <strong>1 kHz</strong>, con 10M parámetros, entrenado con más de 1.000 h de movimiento humano retargeted y RL sim-to-real, que reemplaza 109.504 líneas de C++; el S1 pasó a emitir objetivos de articulación a 200 Hz. El <strong>Helix 2.5</strong> (sep/2026), preentrenado en el dataset de video humano <em>Index</em>, ordena la sala, dobla toallas y hace la cama <strong>zero-shot en 30 casas</strong> nunca vistas; solo el preentrenamiento en el Index lleva el éxito zero-shot de <strong>9% a 56%</strong> (números de Figure). Todo cerrado, corriendo en el <strong>Figure 03</strong> (oct/2025) — sin venta al consumidor ni precio público en oct/2026.</p>
 <div class="space-y-4 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">S2</div>
@@ -221,13 +222,13 @@
 </div>
 <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 El conflicto que resuelve el sistema dual</h3>
-<p class="dark:text-gray-300 light-text-gray-700">Un VLM grande es inteligente, pero lento; un controlador rápido es ágil, pero tonto. Separar ambos y conectarlos mediante un <strong>vector latente</strong> ofrece lo mejor de ambos: razonamiento generalista + malla de control de alta frecuencia. Es la arquitectura convergente de los humanoides de vanguardia.</p>
+<p class="dark:text-gray-300 light-text-gray-700">Un VLM grande es inteligente, pero lento; un controlador rápido es ágil, pero tonto. Separar ambos y conectarlos mediante un <strong>vector latente</strong> da lo mejor de ambos: razonamiento generalista + lazo de control de alta frecuencia. En 2026 la jerarquía ganó un tercer nivel (S0 a 1 kHz en Helix 02) y se volvió el estándar de los humanoides de punta: GR00T N1.7 llama a la suya "Action Cascade".</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Helix</p><p class="text-xs dark:text-gray-400 light-text-gray-600">VLA jerárquico de Figure.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">System 1/2</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Rápidos y lentos acoplados.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">System 0/1/2</p><p class="text-xs dark:text-gray-400 light-text-gray-600">1 kHz · 200 Hz · lento (Helix 02).</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Vector latente</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Puente entre los sistemas.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Parte superior del cuerpo completa</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Torso + manos con 1 VLA.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Whole-body</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Cuerpo completo desde Helix 02.</p></div>
 </div>
 </section>
 <!-- TÓPICO 4 -->
@@ -236,7 +237,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔴 Tesla Optimus: integración con la pila de visión/FSD</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Optimus</strong> es la apuesta de Tesla por un humanoide que reutiliza la infraestructura de IA del FSD: redes de visión end-to-end, cómputo propietario y una cultura de recopilación de datos a gran escala. La estrategia es empezar por la <strong>fabricación interna</strong> (mover piezas en sus propias fábricas), generando datos de teleoperación integrados verticalmente antes de escalar hacia afuera.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Optimus</strong> es la apuesta de Tesla por un humanoide que reutiliza la infraestructura de IA del FSD: redes de visión end-to-end, cómputo propietario y una cultura de recopilación de datos a gran escala. La estrategia es empezar por la <strong>fabricación interna</strong> (mover piezas en las propias fábricas), generando datos verticalmente integrados antes de escalar hacia afuera. Según blogs secundarios (no hay fuente técnica primaria de Tesla), la red es única de punta a punta, derivada de la pila del FSD y entrenada principalmente con video humano en primera persona. <strong>Estado en oct/2026:</strong> el Optimus V3 tenía una presentación prometida para el 1.er trim/2026 y luego para "mediados de año", pero hasta ago/2026 no se había mostrado públicamente; Tesla mantiene, en un 8-K ante la SEC, el inicio de producción antes de fin de 2026 en Fremont y una capacidad objetivo de 1 millón/año.</p>
 <div class="grid md:grid-cols-2 gap-6 mb-6">
 <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
 <h4 class="font-bold text-emerald-400 mb-4">✓ Ventajas de Tesla</h4>
@@ -266,14 +267,14 @@
 <section class="mb-16" id="topico-5">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🟠 Unitree y el hardware abierto: G1/H1</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🟠 Unitree y el open hardware: G1/H1/R1</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A <strong class="text-purple-400">Unitree</strong> cambió el juego de la investigación al lanzar humanoides de bajo costo: el <strong>H1</strong> (tamaño real, locomoción ágil) y el <strong>G1</strong> (~1,27 m, a partir de ~US$ 16k). De repente, laboratorios sin presupuestos de millones pudieron ejecutar políticas en hardware real. El resultado fue una explosión de papers sobre locomoción y manipulación locomotora usando G1/H1 como plataforma estándar.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A <strong class="text-purple-400">Unitree</strong> cambió el juego de la investigación al lanzar humanoides de bajo costo: el <strong>H1</strong>/<strong>H2</strong> (full-size), el <strong>G1</strong> (~1,27 m) y el compacto <strong>R1</strong>. Los precios varían mucho según la versión y el revendedor: según revendedores (ago/2026), el R1 sale desde ~US$ 5.900 en el lanzamiento y el G1 desde ~US$ 21.600 (los ~US$ 16 mil citados antes son un precio antiguo); la tienda oficial no lista el precio de los más grandes. De repente, laboratorios sin presupuesto de millones pudieron correr políticas en hardware real. El resultado fue una explosión de papers de locomoción y loco-manipulación usando G1/H1 como plataforma estándar — y el G1 está soportado nativamente en LeRobot desde la v0.5 (mar/2026). En ago/2026 Unitree salió a bolsa en el STAR Market de Shanghái a ~US$ 9 mil millones; en 2025 los ingresos con humanoides (¥ 867,8 mi) ya superaron a los de cuadrúpedos (CNBC, citando el prospecto).</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Por qué importa el costo</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>~10-50×</strong> más barato que plataformas de investigación occidentales comparables.</li>
-<li><strong>SDK abierto</strong> y ROS2 — baja barrera para integrar políticas VLA y RL de marcha.</li>
+<li><strong>Precio de entrada</strong> — decenas de miles de dólares en lugar de plataformas de investigación hechas a pedido; abre el hardware real a laboratorios más pequeños.</li>
+<li><strong>SDK abierto</strong>, ROS2 y LeRobot — baja barrera para integrar políticas VLA y RL de marcha.</li>
 <li><strong>Estandarización</strong> — la comparabilidad entre papers acelera todo el campo.</li>
 </ul>
 </div>
@@ -283,7 +284,7 @@
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Unitree G1/H1</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Humanoides de bajo costo.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">~US$ 16k</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Precio base del G1.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">~US$ 21,6 mil</p><p class="text-xs dark:text-gray-400 light-text-gray-600">G1, según revendedores (ago/2026).</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">SDK abierto</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Integración fácil.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Plataforma estándar</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Base de muchos papers.</p></div>
 </div>
@@ -294,7 +295,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">6</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚖️ Locomoción + manipulación: control de cuerpo completo</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La frontera de los humanoides no es caminar ni agarrar objetos por separado: es <strong class="text-purple-400">hacer ambas cosas al mismo tiempo</strong>. O <strong>control de cuerpo completo</strong> coordina la marcha, el equilibrio y los brazos en un solo controlador, generalmente con <strong>RL</strong> para una locomoción robusta en terrenos variados y una política de manipulación acoplada. Manipular mientras se mantiene el equilibrio es lo que separa una demo viral de una utilidad económica real.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La frontera de los humanoides no es caminar ni agarrar objetos por separado: es <strong class="text-purple-400">hacer ambas cosas al mismo tiempo</strong>. O <strong>control de cuerpo completo</strong> coordina la marcha, el equilibrio y los brazos en un solo controlador, generalmente con <strong>RL</strong> para locomoción robusta en terreno variado y una política de manipulación acoplada. Manipular mientras se mantiene el equilibrio es lo que separa una demo viral de una utilidad económica real. Ejemplos con fuente: el LBM de Boston Dynamics + TRI controla todo el Atlas a 30 Hz con diffusion transformer y flow matching (ago/2025); el Atlas eléctrico se volvió producto en la CES (ene/2026), con el lote de 2026 ya comprometido con Hyundai y Google DeepMind, según la prensa; el Helix 02 y el Gemini Robotics 2 (jul/2026, "feet to fingertips") controlan el cuerpo completo. Estado del mercado, sin exagerar: el <strong>1X NEO</strong> está en preventa (US$ 20 mil o US$ 499/mes) con fábrica en producción desde abr/2026, pero sin entrega confirmada a clientes hasta jul/2026; el <strong>Agility Digit</strong> es el más comercial (GXO, Schaeffler, Mercado Libre, según la prensa), con el Digit v5 revelado en sep/2026.</p>
 <div class="space-y-4 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
@@ -322,12 +323,13 @@
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumen del módulo</h2>
 <div class="space-y-3 mb-8">
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Forma humana</strong><span class="dark:text-gray-400 light-text-gray-600"> — opera en el mundo brownfield existente; generalidad de forma × foundation model.</span></div></div>
-<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">GR00T</strong><span class="dark:text-gray-400 light-text-gray-600"> — NVIDIA proporciona un cerebro dual + una fábrica de datos (Isaac/Cosmos) cross-embodiment.</span></div></div>
-<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Figure Helix</strong><span class="dark:text-gray-400 light-text-gray-600"> — System 1/2 con vector latente; un VLA controla el torso y las manos.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">GR00T</strong><span class="dark:text-gray-400 light-text-gray-600"> — NVIDIA aporta cerebro dual + fábrica de datos (Isaac/Cosmos) cross-embodiment; N1.7 (3B, pesos abiertos) hoy, N2 (World Action Model) anunciado.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Figure Helix</strong><span class="dark:text-gray-400 light-text-gray-600"> — de S1/S2 en el torso (2025) a S0/S1/S2 en el cuerpo completo (Helix 02) y zero-shot en 30 casas (Helix 2.5, sep/2026).</span></div></div>
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Tesla &amp; Unitree</strong><span class="dark:text-gray-400 light-text-gray-600"> — integración industrial a escala frente a hardware abierto barato que democratiza la investigación.</span></div></div>
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Control de todo el cuerpo</strong><span class="dark:text-gray-400 light-text-gray-600"> — manipular mientras camina es la verdadera prueba de utilidad.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">3.3 — Arquitecturas híbridas: LLM Planner + VLA Executor. Cómo el sistema dual se generaliza para la planificación a largo plazo.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
 <a class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition" href="modulo-3-3.html">Próximo módulo →</a>

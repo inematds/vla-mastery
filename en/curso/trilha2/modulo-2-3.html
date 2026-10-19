@@ -176,7 +176,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">2</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 MuJoCo / MJX: precise contact and differentiable physics</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">MuJoCo</strong> (Multi-Joint dynamics with Contact, now open-source from DeepMind) is a reference for contact and friction physics in manipulation. <strong class="text-blue-400">MJX</strong> reimplements the solver in <strong class="text-blue-400">JAX</strong>, running thousands of simulations on GPU/TPU with <code class="font-mono text-sm">vmap</code> and gradients via <code class="font-mono text-sm">grad</code> — enabling differentiable trajectory optimization.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">MuJoCo</strong> (Multi-Joint dynamics with Contact, now open-source from DeepMind) is a reference for contact and friction physics in manipulation. <strong class="text-blue-400">MJX</strong> reimplements the solver in <strong class="text-blue-400">JAX</strong>, running thousands of simulations on GPU/TPU with <code class="font-mono text-sm">vmap</code> and gradients via <code class="font-mono text-sm">grad</code> — opening up differentiable trajectory optimization. As of Oct/2026, MuJoCo is at <strong class="text-blue-400">3.16.0</strong> (Oct 14, 2026), with nearly biweekly releases. Since 3.5.0 (Feb 12, 2026) there has been the <strong class="text-blue-400">MuJoCo Warp (MJWarp)</strong>, built by NVIDIA and Google DeepMind on NVIDIA Warp, for high-throughput batched simulation (RL); classic MuJoCo remains for latency-sensitive work. 3.5.0 also brought a Python toolbox for system identification and actuator and sensor delays. According to the discussion on the Playground's GitHub, MJX gained a Warp backend and MuJoCo Playground runs with MJWarp (beta).</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>pip install mujoco mujoco-mjx jax[cuda12]
 
@@ -207,7 +207,7 @@ def step(state, ctrl):
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">3</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 NVIDIA Isaac Sim / Isaac Lab: GPU simulation with RTX</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">Isaac Sim</strong> (on Omniverse/PhysX 5) delivers physics and rendering <strong class="text-blue-400">RTX</strong> on the GPU; <strong class="text-blue-400">Isaac Lab</strong> is the RL/learning framework built on top of it, running thousands of parallel environments without leaving the GPU—observations, physics, and policy coexist in the same VRAM, eliminating the CPU↔GPU bottleneck.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">Isaac Sim</strong> (on Omniverse/PhysX 5) delivers physics and rendering <strong class="text-blue-400">RTX</strong> on the GPU; <strong class="text-blue-400">Isaac Lab</strong> is the RL/learning framework built on top of it, running thousands of parallel environments without leaving the GPU — observations, physics, and policy live in the same VRAM, eliminating the CPU↔GPU bottleneck. Versions as of Oct/2026: <strong class="text-blue-400">Isaac Sim 6.0</strong> GA on 06/08/2026 (Isaac Sim MCP + agent skills, teleoperation to collect demos) and <strong class="text-blue-400">6.1</strong> GA in 09/2026 (Kit 110.3.0; Linux x86_64, Linux aarch64 and Windows). <strong class="text-blue-400">Isaac Lab 3.0</strong> does not have a final release yet: v3.0.0-EA (09/16/2026) requires Isaac Sim 6.1, a new Python 3.12 environment (don't upgrade 2.x in place), and <code class="font-mono text-sm">uv run</code> (o <code class="font-mono text-sm">isaaclab.sh</code> was deprecated); the previous stable line is v2.3.x. Underneath it sits the <strong class="text-blue-400">Newton</strong>, an open physics engine (Linux Foundation) from NVIDIA, Google DeepMind, and Disney built on Warp and OpenUSD, with 1.0 GA at GTC in 03/2026, according to dataconomy.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Why scale matters</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
@@ -255,7 +255,8 @@ def step(state, ctrl):
 <li><strong>MuJoCo</strong> — contact/manipulation, fine-grained physics.</li>
 <li><strong>Isaac Sim</strong> — scale + RTX, locomotion, and manipulation.</li>
 <li><strong>Habitat</strong> — navigation, EQA, real scanned scenes.</li>
-<li><strong>Genesis / SAPIEN</strong> — new options 2024-26, speed and articulated robots.</li>
+<li><strong>Genesis / SAPIEN</strong> — newer options for speed and articulated bodies (the current version of Genesis was not confirmed in Oct/2026).</li>
+<li><strong>Gazebo Jetty</strong> — LTS until 09/2030, official counterpart of ROS 2 Lyrical: the path to integrate with ROS 2 (module 2.4).</li>
 </ul>
 </div>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
@@ -338,18 +339,23 @@ obs["rgb"], obs["depth"]         # sensores sintéticos</code></pre>
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">6</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Benchmarks: LIBERO, Meta-World, RoboSuite</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Benchmarks standardize comparisons. <strong class="text-blue-400">LIBERO</strong> measures continual learning and knowledge transfer in manipulation (LIBERO-Spatial, Object, Goal, Long); <strong class="text-blue-400">Meta-World</strong> offers 50 tasks for meta/multi-task RL; <strong class="text-blue-400">RoboSuite</strong> (MuJoCo) is a widely used modular manipulation suite in VLA papers.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Benchmarks standardize comparisons. <strong class="text-blue-400">LIBERO</strong> measures continual learning and knowledge transfer in manipulation (LIBERO-Spatial, Object, Goal, Long); <strong class="text-blue-400">Meta-World</strong> offers 50 tasks for meta/multi-task RL; <strong class="text-blue-400">RoboSuite</strong> (MuJoCo) is a modular manipulation suite widely used in VLA papers. Heads-up in Oct/2026: the <strong class="text-blue-400">LIBERO is saturated</strong> — OpenVLA-OFT 97.1% (02/2025), MolmoAct 2 97.2% (05/2026), X-VLA 98.1% —, so it no longer separates the top models. Use harder versions (LIBERO-Plus, RoboTwin 2.0), mobile manipulation (RoboCasa365), and real-world evaluation (RoboArena, A/B ranking between pairs). In LeRobot 0.6, the <code class="font-mono text-sm">lerobot-eval</code> already includes LIBERO, LIBERO-plus, Meta-World, RoboTwin 2.0, RoboCasa365, RoboCerebra, RoboMME, IsaacLab Arena and VLABench.</p>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Practical tip</h3>
 <p class="dark:text-gray-300 light-text-gray-700">Report the benchmark <strong>complete</strong>, not just the suite where your model shines. Cherry-picking a single LIBERO suite is robotics' "p-hacking"—reviewers and the community expect all four suites plus the average.</p>
 </div>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
-<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># avaliar OpenVLA fine-tunado em LIBERO (suites padrão)
-python run_libero_eval.py \
-  --model_path outputs/openvla-libero \
-  --task_suite_name libero_spatial \
-  --num_trials_per_task 50
-# reporta success rate médio por suite -&gt; número comparável entre papers</code></pre>
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># avaliar em simulação com o lerobot-eval (LeRobot 0.6.1, testado em 19/10/2026 no PushT)
+pip install "lerobot[pusht]==0.6.1"
+# o checkpoint é o ACT treinado no módulo 2.2
+lerobot-eval \
+  --policy.path=outputs/train/act_pusht_teste/checkpoints/last/pretrained_model \
+  --env.type=pusht --eval.n_episodes=10 --eval.batch_size=10 \
+  --eval.use_async_envs=false --policy.device=cuda \
+  --output_dir=outputs/eval/act_200
+# sai pc_success (taxa de sucesso) + vídeos mp4 dos episódios
+# sem --eval.use_async_envs=false os subprocessos não acham o gym_pusht
+# LIBERO e os outros benchmarks também estão no lerobot-eval (não testados aqui: instalação pesada)</code></pre>
 </div>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 What each one measures</h3>
@@ -374,9 +380,10 @@ python run_libero_eval.py \
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">MuJoCo/MJX</strong><span class="dark:text-gray-400 light-text-gray-600"> — precise contact and differentiable physics in JAX.</span></div></div>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Isaac Sim/Lab</strong><span class="dark:text-gray-400 light-text-gray-600"> — GPU and RTX scaling for massive RL.</span></div></div>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Reality gap</strong><span class="dark:text-gray-400 light-text-gray-600"> — sim ≠ real; evaluate honestly.</span></div></div>
-<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Benchmarks</strong><span class="dark:text-gray-400 light-text-gray-600"> — LIBERO, Meta-World, RoboSuite compare policies.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Benchmarks</strong><span class="dark:text-gray-400 light-text-gray-600"> — LIBERO, Meta-World, RoboSuite compare policies; LIBERO saturated (≥97% in 2026) calls for RoboTwin 2.0, RoboCasa365, and real-world evaluation.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Next module</h3><p class="dark:text-gray-300 light-text-gray-700">2.4 — ROS2: the middleware that takes your policy from the simulator to the real arm, with tf2, MoveIt2, and real-time support.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Updated in Oct/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Back to the track</a>
 <a class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-4.html">Next module →</a>

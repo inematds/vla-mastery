@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Módulo 3.6 — Frontera 2026-2030 — VLA Mastery</title>
-<meta content="La frontera de la robótica 2026-2030: scaling laws, world models (Genie, Cosmos), self-improvement, fleet learning, certificación ISO y escenarios para 2030." name="description"/>
+<meta content="La frontera de la robótica 2026-2030 (actualizado en oct/2026): leyes de escala de datos humanos, World Action Models (DreamZero, GR00T N2, Cosmos 3), RL posentrenamiento, fleet learning, certificación (ISO 10218:2025, ISO 25785-1, AI Act) y qué observar hasta 2030." name="description"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -116,7 +116,7 @@
 <h2 class="text-2xl sm:text-3xl font-bold dark:text-white light-text-gray-900 mb-10">Contenido detallado</h2>
 <!-- SVG: curva de capacidade 2026-2030 -->
 <div class="rounded-2xl border border-purple-500/30 dark:bg-dark-900/40 light-bg-gray-50 p-5 mb-12">
-<svg aria-label="Curva proyectada de capacidad de la robótica generalista de 2026 a 2030, con hitos de world models, self-improvement, fleet learning y certificación" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 880 320">
+<svg aria-label="Qué observar de 2026 a 2030: World Action Models y RL posentrenamiento ya en 2026; después la norma ISO 25785-1, los plazos del AI Act para máquinas y fleet learning — hitos ilustrativos, no una predicción" class="w-full h-auto" font-family="Inter,sans-serif" role="img" viewbox="0 0 880 320">
 <defs>
 <lineargradient id="m36-grad" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#a855f7"></stop><stop offset="1" stop-color="#38bdf8"></stop></lineargradient>
 <filter height="200%" id="m36-glow" width="200%" x="-50%" y="-50%"><fegaussianblur stddeviation="2"></fegaussianblur></filter>
@@ -131,10 +131,10 @@
 <path d="M500 150 S 720 70, 840 50" fill="none" stroke="url(#m36-grad)" stroke-dasharray="8 6" stroke-width="3.5"></path>
 <!-- milestones -->
 <g font-size="11" font-weight="700">
-<circle cx="170" cy="245" fill="#a855f7" r="6"></circle><text fill="#c4b5fd" text-anchor="middle" x="170" y="290">2026</text><text fill="#e9d5ff" text-anchor="middle" x="170" y="228">¿scaling laws?</text>
-<circle cx="360" cy="208" fill="#a855f7" r="6"></circle><text fill="#c4b5fd" text-anchor="middle" x="360" y="290">2027</text><text fill="#e9d5ff" text-anchor="middle" x="360" y="192">modelos del mundo</text>
-<circle cx="540" cy="138" fill="#38bdf8" r="6"></circle><text fill="#7dd3fc" text-anchor="middle" x="540" y="290">2028</text><text fill="#e0f2fe" text-anchor="middle" x="540" y="122">self-improve</text>
-<circle cx="700" cy="86" fill="#38bdf8" r="6"></circle><text fill="#7dd3fc" text-anchor="middle" x="700" y="290">2029</text><text fill="#e0f2fe" text-anchor="middle" x="700" y="70">fleet + ISO</text>
+<circle cx="170" cy="245" fill="#a855f7" r="6"></circle><text fill="#c4b5fd" text-anchor="middle" x="170" y="290">2026</text><text fill="#e9d5ff" text-anchor="middle" x="170" y="228">WAM · RL post-entrenamiento</text>
+<circle cx="360" cy="208" fill="#a855f7" r="6"></circle><text fill="#c4b5fd" text-anchor="middle" x="360" y="290">2027</text><text fill="#e9d5ff" text-anchor="middle" x="360" y="192">¿ISO 25785-1?</text>
+<circle cx="540" cy="138" fill="#38bdf8" r="6"></circle><text fill="#7dd3fc" text-anchor="middle" x="540" y="290">2028</text><text fill="#e0f2fe" text-anchor="middle" x="540" y="122">AI Act: máquinas</text>
+<circle cx="700" cy="86" fill="#38bdf8" r="6"></circle><text fill="#7dd3fc" text-anchor="middle" x="700" y="290">2029</text><text fill="#e0f2fe" text-anchor="middle" x="700" y="70">¿fleet learning?</text>
 <circle cx="828" cy="52" fill="#38bdf8" filter="url(#m36-glow)" r="7"></circle><text fill="#7dd3fc" text-anchor="middle" x="828" y="290">2030</text>
 </g>
 </svg>
@@ -145,10 +145,10 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">1</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📐 Scaling laws para robótica</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La pregunta de los miles de millones: <strong class="text-purple-400">el rendimiento de las VLAs escala de forma predecible con los datos y el compute</strong>, como en los LLM? Si hay leyes de escala claras, la carrera se convierte en una recolección de datos a escala industrial. Si no —si dominan la arquitectura o el embodiment—, entonces el ingenio importa más que el volumen. En 2026 la evidencia todavía es parcial y discutida.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La pregunta de los miles de millones: <strong class="text-purple-400">el rendimiento de las VLAs escala de forma predecible con los datos y el compute</strong>, como en los LLMs? Si hay leyes de escala claras, la carrera se convierte en recolección de datos a escala industrial. Si no — si la arquitectura o el embodiment dominan — entonces el ingenio importa más que el volumen. En oct/2026 la evidencia se fortaleció, pero todavía proviene de empresas y no de replicación independiente: Figure dice que el <strong>Helix 2.5</strong> (sep/2026) sigue una ley de escala de transferencia humano→humanoide, con la loss prevista con 4 decimales, y que el preentrenamiento en video humano (Index) lleva el éxito zero-shot de 9% a 56%; Generalist AI reporta, según fuentes secundarias, que GEN-0 (nov/2025, ~270 mil h de manipulación real) escala con datos y "osifica" por debajo de 1B parámetros.</p>
 <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 Por qué la robótica es diferente de los LLM</h3>
-<p class="dark:text-gray-300 light-text-gray-700">El texto de la web es prácticamente gratuito y abundante; las trayectorias de robots son caras y escasas. Aunque las scaling laws sean válidas, el cuello de botella es <strong>obtener los datos</strong>. Por eso los world models y el self-improvement (temas que siguen) son tan estratégicos: abordan la oferta de datos.</p>
+<p class="dark:text-gray-300 light-text-gray-700">El texto de la web es prácticamente gratuito y abundante; las trayectorias de robots son caras y escasas. Aunque las scaling laws sean válidas, el cuello de botella es <strong>obtener los datos</strong>. El giro de 2026 fue el <strong>video humano egocéntrico</strong> como fuente principal de preentrenamiento (Index de Figure, ago/2026; EgoVerse, abr/2026; GR00T N1.7 con "20,000+ hours of human egocentric video"). Los world models y el self-improvement (temas siguientes) atacan el mismo cuello de botella.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Leyes de escalado</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Rendimiento ~ datos×cómputo.</p></div>
@@ -161,22 +161,24 @@
 <section class="mb-16" id="topico-2">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">2</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🌍 World models: Genie, Cosmos</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🌍 World models y World Action Models: Genie 3, Cosmos 3, DreamZero</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Modelos del mundo</strong> aprenden la dinámica del mundo: dado un estado y una acción, predicen el siguiente estado. <strong>Genie</strong> (DeepMind) genera entornos interactivos a partir de video; <strong>NVIDIA Cosmos</strong> es una plataforma de world foundation models para generar datos físicos sintéticos. Atacan el cuello de botella de datos del tema anterior: simulación neuronal barata y casi infinita para entrenar y planificar.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-purple-400">Modelos del mundo</strong> aprenden la dinámica del mundo: dado un estado y una acción, predicen el siguiente estado. <strong>Genie 3</strong> (DeepMind, ago/2025) genera mundos interactivos en tiempo real a 720p y 24 fps, consistentes durante algunos minutos; <strong>V-JEPA 2</strong> (Meta, jun/2025, 1,2B, abierto) planifica pick-and-place zero-shot en el espacio latente. En NVIDIA, las líneas separadas de 2025 (Predict/Reason/Transfer) se unificaron en el <strong>Cosmos 3</strong> (pesos en HF el 31/05/2026, licencia OpenMDW 1.1): Super 64B, Nano 16B y Edge 4B (el Edge corre en RTX, DGX y Jetson Thor), que sirve como VLM, como simulador para datos sintéticos o como backbone de política.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La categoría nueva de 2026 es el <strong class="text-purple-400">World Action Model (WAM)</strong>: un solo modelo predice, en conjunto, el video del futuro y las acciones. El <strong>DreamZero</strong> (NVIDIA, arXiv feb/2026) es una difusión de video autorregresiva de 14B que, según el paper, generaliza más de 2x mejor que los VLAs de punta en tareas y entornos nuevos, corre en lazo cerrado a 7 Hz y se adapta a un cuerpo nuevo con 30 min de "play data". El <strong>GR00T N2</strong> (avance en la GTC, mar/2026; lanzamiento previsto para fines de 2026, aún no lanzado en oct/2026) usa esa arquitectura, y el <strong>1X World Model</strong> (backbone de video de 14B) es desde ene/2026 el "núcleo cognitivo" de NEO. Tesis: predecir el video del futuro enseña física mejor que predecir solo acciones. Genie 4 y V-JEPA 3 no se encontraron hasta oct/2026.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Dos usos de los world models</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>Generar datos</strong> — sintetizar trayectorias físicas plausibles a gran escala (Cosmos), reduciendo la recolección real.</li>
-<li><strong>Planificar imaginando</strong> — el robot «sueña» futuros en el modelo antes de actuar (model-based RL).</li>
+<li><strong>Generar datos</strong> — sintetizar trayectorias físicas plausibles en masa (Cosmos 3), reduciendo la recolección real.</li>
+<li><strong>Planificar imaginando</strong> — el robot "sueña" futuros en el modelo antes de actuar (model-based RL; V-JEPA 2).</li>
+<li><strong>Ser la propia política</strong> — el WAM predice video y acción juntos (DreamZero, GR00T N2, 1X World Model). LeRobot 0.6 (jul/2026) ya trae políticas de este tipo: VLA-JEPA, FastWAM y LingBot-VA.</li>
 <li><strong>Puente con sim-to-real</strong> — complementan Isaac/MuJoCo con renderizado y dinámica aprendidas.</li>
 </ul>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Modelo del mundo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Aprende la dinámica del mundo.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Genie</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Entornos interactivos generados.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cosmos</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Datos físicos sintéticos.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Simulación neuronal</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Simulación aprendida.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Genie 3</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mundos interactivos (ago/2025).</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Cosmos 3</p><p class="text-xs dark:text-gray-400 light-text-gray-600">64B/16B/4B, abiertos (may/2026).</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">WAM</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Video + acción juntos (2026).</p></div>
 </div>
 </section>
 <!-- TÓPICO 3 -->
@@ -185,7 +187,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">3</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">♻️ Auto-mejora: robots generando datos</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">El santo grial es el <strong class="text-purple-400">ciclo de autoaprendizaje</strong>: robots que recopilan sus propios datos mediante RL a escala y con autonomía de recopilación, y mejoran sin demostraciones humanas en cada ciclo. Combinado con world models, esto puede hacer que la mejora continua sea económica — el equivalente robótico del RLHF/RL en los LLM.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">El santo grial es el <strong class="text-purple-400">ciclo de autoaprendizaje</strong>: robots que recolectan sus propios datos vía RL a escala y autonomía de recolección, mejorando sin demostración humana en cada ciclo. Combinado con world models, esto puede hacer que la mejora continua sea barata — el equivalente robótico del RLHF/RL en LLMs. Entre nov/2025 y mar/2026 el <strong>RL en el posentrenamiento de VLA</strong> salió de la teoría: el <strong>Recap</strong> de π*0.6 (Physical Intelligence, nov/2025) aprende con correcciones y políticas condicionadas por ventaja y, según PI, más que duplica el throughput en tareas difíciles; el <strong>RL Token</strong> (RLT, mar/2026) entrena un actor-crítico pequeño online sobre un token del VLA con pocas horas, o minutos, de datos; el GR-RL (ByteDance, dic/2025) convierte un generalista en especialista mediante RL. En LeRobot 0.6, el <code>lerobot-rollout</code> con estrategia <code>dagger</code> graba correcciones humanas durante la ejecución.</p>
 <div class="space-y-4 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
@@ -202,7 +204,7 @@
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Por qué todavía no llegamos ahí</h3>
-<p class="dark:text-gray-300 light-text-gray-700">El RL real es caro y arriesgado (el hardware se rompe), y definir recompensas para tareas abiertas es difícil. Los world models reducen el costo al llevar el RL a la simulación neuronal, pero cerrar el flywheel con fiabilidad es una frontera activa de 2026-2028.</p>
+<p class="dark:text-gray-300 light-text-gray-700">El RL real es caro y riesgoso (el hardware se rompe), y definir la recompensa para tareas abiertas es difícil. Los world models reducen el costo llevando el RL al sim neural, pero cerrar el flywheel con confiabilidad, sin un humano corrigiendo, sigue siendo una frontera abierta — qué observar: RL online en más tareas además de las 4 de precisión de RLT y números de terceros, no solo de la empresa.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Self-improvement</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mejora sin intervención humana.</p></div>
@@ -217,7 +219,7 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🚢 Multirrobot y transferencia: fleet learning</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La consecuencia natural de un foundation model es <strong class="text-purple-400">un cerebro, muchos cuerpos</strong>. En el <strong>fleet learning</strong>, cada robot en campo aporta datos que mejoran el modelo central, y cada actualización OTA mejora toda la flota. Combinado con cross-embodiment (Trilha 2), una mejora en un brazo puede beneficiar a un humanoide.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La consecuencia natural de un foundation model es <strong class="text-purple-400">un cerebro, muchos cuerpos</strong>. En el <strong>fleet learning</strong>, cada robot en campo aporta datos que mejoran el modelo central, y cada update vía OTA mejora a toda la flota. Combinado con cross-embodiment (Trilha 2), una mejora en un brazo puede beneficiar a un humanoide. En 2026 eso apareció con números: el mismo checkpoint del <strong>Gemini Robotics 2</strong> (jul/2026) corre en Apollo 2 con dos manos distintas y en Franka Duo, y se adapta a un cuerpo bimanual nuevo "en pocas horas", normalmente con menos de 200 ejemplos, según DeepMind.</p>
 <div class="bg-gradient-to-br dark:from-purple-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-purple-400 mb-3">💡 La ventaja compuesta de la flota</h3>
 <p class="dark:text-gray-300 light-text-gray-700">Es el mismo efecto de red que hizo difícil de alcanzar el FSD de Tesla: quienes tienen más robots operando aprenden más rápido, lo que les permite vender más robots. El <strong>fleet learning</strong> convierte la escala de deploy en una ventaja para el modelo: un moat que se profundiza con el tiempo.</p>
@@ -235,13 +237,13 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🛡️ Seguridad y certificación: ISO, fail-safe</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Ningún despliegue a una escala cercana a la humana ocurre sin <strong class="text-purple-400">certificación</strong>. Normas como <strong>ISO 10218</strong> (robots industriales) y <strong>ISO/TS 15066</strong> (los cobots) definen límites de fuerza y protocolos. El nuevo desafío: cómo certificar un sistema <em>aprendido y probabilístico</em>? Exige mecanismos de seguridad deterministas, garantías de monitoreo y alineación física.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Ningún despliegue a una escala cercana a la humana ocurre sin <strong class="text-purple-400">certificación</strong>. El panorama en oct/2026, siempre según la fuente indicada: la <strong>ISO 10218-1:2025</strong> (robots) y la <strong>ISO 10218-2:2025</strong> (aplicaciones y celdas) siguen en <strong>dos partes</strong>, reemplazaron las versiones de 2011 y absorbieron el contenido de la <strong>ISO/TS 15066</strong> (cobots), manteniendo las 4 técnicas colaborativas: parada monitoreada, guiado manual, monitoreo de velocidad y separación, y limitación de potencia y fuerza (según fuentes secundarias; no se pudo leer iso.org). En EE. UU., la <strong>ANSI/A3 R15.06-2025</strong> adopta la ISO 10218, con la parte 3 finalizada en ene/2026 (según la A3). Para humanoides y robots con equilibrio activo, la <strong>ISO 25785-1</strong> todavía es un borrador (ISO/CD), con publicación estimada para 2026–2027 — ningún fabricante puede alegar certificación en ella (según Drives &amp; Controls, oct/2026). En la UE, el <strong>Digital Omnibus</strong> (acuerdo político en may/2026) sacó las máquinas de la lista de alto riesgo del propio AI Act y envió los requisitos de IA al Reglamento de Máquinas (portal de la UE); los plazos de alto riesgo se aplazaron al 02/12/2027 (Anexo III) y al 02/08/2028 (Anexo I), según el portal de la UE y despachos de abogados. <strong>No existe una norma ISO/IEEE específica para VLA</strong>; lo que hay son benchmarks académicos de 2026 (RoboJailBench, SafeVLA-Bench, ForesightSafety-VLA, LIBERO-Safety) e informes de empresa, como el informe técnico de seguridad de Gemini Robotics 2. El desafío de fondo continúa: cómo certificar un sistema <em>aprendido y probabilístico</em>? Exige mecanismos de seguridad deterministas, garantías de monitoreo y alineación física.</p>
 <div class="grid md:grid-cols-2 gap-6 mb-6">
 <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
 <h4 class="font-bold text-emerald-400 mb-4">✓ Ruta de certificación</h4>
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700 text-sm">
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span><strong>A prueba de fallas</strong> determinístico que involucra la política aprendida (capa de seguridad rígida).</span></li>
-<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Límites de fuerza/velocidad certificables (ISO 15066) por hardware.</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Límites de fuerza/velocidad certificables por hardware (limitación de potencia y fuerza, hoy dentro de la ISO 10218-2:2025).</span></li>
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Monitoreo en runtime y parada segura garantizada.</span></li>
 </ul>
 </div>
@@ -255,7 +257,7 @@
 </div>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">ISO 10218/15066</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Normas de seguridad.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">ISO 10218:2025</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Partes 1 y 2; absorbió la TS 15066.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">A prueba de fallas</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Capa de seguridad rígida.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Garantías</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Certificar lo aprendido.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Alineación física</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Actuar dentro de los límites.</p></div>
@@ -265,21 +267,21 @@
 <section class="mb-16" id="topico-6">
 <div class="flex items-center gap-4 mb-6">
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">6</span>
-<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔮 Escenarios de 2030: trabajo, industria, sociedad</h2>
+<h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔮 Escenarios 2030: qué observar</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">¿Adónde nos lleva todo esto? Los escenarios de 2030 van desde <strong class="text-purple-400">transformador</strong> (robots generalistas en fábricas, almacenes y hogares, aumento de productividad comparable al de la electricidad) a <strong>incremental</strong> (deploy lento, atrapado en el valle de la desilusión). La verdad probablemente está en el medio: adopción sector por sector, comenzando por los casos maduros del Módulo 3.4.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">¿A dónde nos lleva todo esto? Nadie tiene fuente para predecir 2030; los escenarios de abajo son <strong>hipótesis de trabajo</strong>, y lo que importa es saber qué señales observar: que el GR00T N2 salga de verdad; que el Optimus V3 aparezca y empiece la producción; que el 1X NEO entregue a clientes; que se publique la ISO 25785-1; que se mantengan los plazos del AI Act (12/2027 y 08/2028); que rankings reales como RoboArena y BEHAVIOR 2026 suban con evaluación de terceros. Los escenarios van desde <strong class="text-purple-400">transformador</strong> (robots generalistas en fábricas, almacenes y hogares, aumento de productividad comparable al de la electricidad) a <strong>incremental</strong> (deploy lento, atrapado en el valle de la desilusión). La verdad probablemente está en el medio: adopción sector por sector, comenzando por los casos maduros del Módulo 3.4.</p>
 <div class="space-y-6 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">A</div>
-<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Escenario acelerado</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Las leyes de escalado se cumplen + los world models desbloquean datos + el aprendizaje de flotas se acumula. Robots útiles a gran escala para ~2030.</p></div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Escenario acelerado</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Las scaling laws se cumplen + los world models desbloquean datos + el fleet learning se acumula. Señal: zero-shot como el de Helix 2.5 replicado por terceros y en más tareas.</p></div>
 </div>
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">B</div>
-<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Escenario base</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Adopción sectorial: logística y manufactura primero; el ámbito doméstico, recién a finales de la década. Transición gradual del trabajo.</p></div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Escenario base</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">Adopción sectorial: logística y manufactura primero, doméstico después. Señal: pilotos (BMW, GXO, Mercedes) que se convierten en contratos con número de unidades.</p></div>
 </div>
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">C</div>
-<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Escenario pesimista</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">La brecha sim-real y la certificación son obstáculos; el sector pasa años en el valle de la desilusión antes de madurar.</p></div>
+<div class="flex-1 dark:bg-dark-800 light-bg-white rounded-xl p-5 border border-dark-600 light-border-gray-200"><h4 class="font-semibold dark:text-white light-text-gray-900 mb-1">Escenario pesimista</h4><p class="dark:text-gray-400 light-text-gray-600 text-sm">La brecha sim-real y la certificación frenan el avance; el sector pasa años en el valle de la desilusión antes de madurar. Señal: exceso de capacidad en China (alerta de la NDRC, 2026) y corrección de valuaciones.</p></div>
 </div>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
@@ -298,13 +300,14 @@
 <div class="bg-gradient-to-br dark:from-purple-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-purple-500/30 p-8">
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Resumen del módulo</h2>
 <div class="space-y-3 mb-8">
-<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Leyes de escalado inciertas</strong><span class="dark:text-gray-400 light-text-gray-600"> — si cumplen las expectativas, los datos pasan a ser el eje de la carrera; pero la escasez de datos es el cuello de botella.</span></div></div>
-<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Modelos del mundo</strong><span class="dark:text-gray-400 light-text-gray-600"> — Genie y Cosmos generan datos y planifican, atacando el cuello de botella de datos.</span></div></div>
-<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Self-improvement + fleet learning</strong><span class="dark:text-gray-400 light-text-gray-600"> — el flywheel autónomo y una flota que aprende en conjunto conforman una ventaja.</span></div></div>
-<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">La certificación es la puerta de entrada</strong><span class="dark:text-gray-400 light-text-gray-600"> — ISO + fail-safe determinan el deploy a escala cerca de las personas.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Leyes de escalado inciertas</strong><span class="dark:text-gray-400 light-text-gray-600"> — la evidencia de 2026 viene de empresas (Helix 2.5, GEN-0); el video humano egocéntrico se volvió la principal fuente de datos.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">World models → WAM</strong><span class="dark:text-gray-400 light-text-gray-600"> — Genie 3 y Cosmos 3 generan datos y planifican; DreamZero, GR00T N2 y 1X World Model predicen video y acción juntos.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Self-improvement + fleet learning</strong><span class="dark:text-gray-400 light-text-gray-600"> — RL de post-entrenamiento (Recap, RL Token) y un checkpoint para varios cuerpos (Gemini Robotics 2) componen la ventaja.</span></div></div>
+<div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">La certificación es la puerta de entrada</strong><span class="dark:text-gray-400 light-text-gray-600"> — ISO 10218:2025 + fail-safe hoy; ISO 25785-1 aún en borrador; AI Act aplazado; ninguna norma específica para VLA.</span></div></div>
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Posiciónate para cualquier escenario</strong><span class="dark:text-gray-400 light-text-gray-600"> — el dominio del stack + la estrategia es valioso durante el boom y en la caída.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">🎓 Completaste la Ruta 3 — y VLA Mastery</h3><p class="dark:text-gray-300 light-text-gray-700">Desde la pila de la cognición (Ruta 1), pasando por la stack técnica (Ruta 2), hasta la estrategia de frontera (Ruta 3): ahora lees la robótica generalista de punta a punta. Vuelve al mapa del curso para repasar cualquier ruta.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
 <a class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition" href="../">Volver al mapa del curso →</a>

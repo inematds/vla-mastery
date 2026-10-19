@@ -103,7 +103,7 @@
 <a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-blue-400 mb-4 inline-block" href="index.html">← Back to Track 2</a>
 <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4">MODULE 2.6</span>
 <h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">📦 Datasets: Open X-Embodiment, DROID, LIBERO</h1>
-<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Data is the fuel for VLA. Here you master Open X-Embodiment (1M+ trajectories, 22 embodiments), RT-X's cross-embodiment effect, DROID's in-the-wild diversity, the LIBERO benchmark, and RLDS harmonization of heterogeneous action spaces.</p>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">Data is the fuel of VLA. Here you master Open X-Embodiment (1M+ trajectories and 22 embodiments, according to the 2023 paper), the cross-embodiment effect of RT-X, the in-the-wild diversity of DROID, the LIBERO benchmark (saturated in 2026) and what came after, the RLDS/LeRobotDataset harmonization of heterogeneous action spaces, and the 2026 shift toward egocentric human video.</p>
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
 <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Topics</div></div>
 <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">40</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutes</div></div>
@@ -148,14 +148,14 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">1</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Open X-Embodiment: 1M+ trajectories, 22 embodiments</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O <strong class="text-blue-400">Open X-Embodiment</strong> (OXE, 2023) is the “ImageNet of robotics”: a collaboration of ~20 labs that unified <strong class="text-blue-400">60+ datasets</strong> in <strong class="text-blue-400">1M+ trajectories</strong> through <strong class="text-blue-400">22 robot bodies</strong> different — from table arms to mobile bases. This made it feasible to train generalist VLAs like OpenVLA and Octo.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O <strong class="text-blue-400">Open X-Embodiment</strong> (OXE, 2023) is the "ImageNet of robotics": according to the Open X-Embodiment paper (2023), a collaboration of dozens of labs that unified <strong class="text-blue-400">60+ datasets</strong> in <strong class="text-blue-400">1M+ trajectories</strong> through <strong class="text-blue-400">22 robot bodies</strong> different — from table arms to mobile bases. This made it feasible to train generalist VLAs like OpenVLA and Octo.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
-<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 OXE in numbers</h3>
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 OXE in numbers (according to the paper, 2023)</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
 <li><strong>1M+</strong> — real demonstration trajectories.</li>
 <li><strong>22</strong> — distinct embodiments (robot types).</li>
 <li><strong>60+</strong> — aggregated source datasets.</li>
-<li><strong>527</strong> — skills covered (approx.).</li>
+<li><strong>2023</strong> — corpus date; numbers as stated by the paper, not rechecked in Oct/2026. It remains the basis of OpenVLA/Octo, but in 2026 the largest pre-training runs already add human video (topic 6).</li>
 </ul>
 </div>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
@@ -219,9 +219,9 @@ sources = ["fractal20220817_data", "bridge", "kuka", "taco_play"]  # subset OXE<
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">3</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 DROID: 76k demos, 564 scenes, in-the-wild</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">DROID</strong> (Distributed Robot Interaction Dataset, 2024) tackles the <strong class="text-blue-400">diversity</strong>: ~76k trajectories collected in <strong class="text-blue-400">564 scenes</strong> and 86 tasks across 13 institutions, with a standardized setup (Franka + RealSense). It is <em>in-the-wild</em> — real offices, kitchens, and labs — not a controlled table.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">DROID</strong> (Distributed Robot Interaction Dataset, 2024) tackles the <strong class="text-blue-400">diversity</strong>: according to the DROID paper (numbers not rechecked in Oct/2026), ~76k trajectories collected in <strong class="text-blue-400">564 scenes</strong> and 86 tasks across 13 institutions, with a standardized setup (Franka + RealSense). It is <em>in-the-wild</em> — real offices, kitchens, and labs — not a controlled table.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
-<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Why diversity matters</h3>
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Why diversity matters (numbers from the DROID paper, 2024)</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
 <li><strong>76k</strong> — trajectories on standardized hardware (Franka).</li>
 <li><strong>564</strong> — distinct scenes; robust visual generalization.</li>
@@ -246,7 +246,7 @@ sources = ["fractal20220817_data", "bridge", "kuka", "taco_play"]  # subset OXE<
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">4</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 LIBERO: continuous learning benchmark</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">LIBERO</strong> is less a training dataset and more a <strong class="text-blue-400">transfer benchmark</strong>: measures how a policy learns new tasks without forgetting old ones (lifelong learning). The four suites isolate dimensions — <strong class="text-blue-400">Spatial</strong>, <strong class="text-blue-400">Object</strong>, <strong class="text-blue-400">Goal</strong> e <strong class="text-blue-400">Long</strong> (long horizon).</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-blue-400">LIBERO</strong> is less a training dataset and more a <strong class="text-blue-400">transfer benchmark</strong>: measures how a policy learns new tasks without forgetting old ones (lifelong learning). The four suites isolate dimensions — <strong class="text-blue-400">Spatial</strong>, <strong class="text-blue-400">Object</strong>, <strong class="text-blue-400">Goal</strong> e <strong class="text-blue-400">Long</strong> (long horizon). <strong class="text-blue-400">As of Oct/2026 LIBERO is saturated:</strong> OpenVLA-OFT 97.1% (02/2025), MolmoAct 2 97.2% and 98.1% in Think mode (05/2026), X-VLA 98.1% and, according to summaries, Galaxea G0.5 98.9% (2026). With all of them above 97%, it has become a sanity test, not a ranking. To compare state-of-the-art models, use the successors: <strong>LIBERO-Plus</strong> e <strong>RoboTwin 2.0</strong> (harder versions), <strong>RoboCasa365</strong> (compositional mobile manipulation), <strong>BEHAVIOR Challenge 2026</strong> (100 complete household tasks, 20,000 demos, and 1,950 h of teleoperation), <strong>MolmoBot</strong> (Ai2) and the <strong>RoboArena</strong> (distributed real-world evaluation, pairwise A/B, global ranking).</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 What each suite isolates</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
@@ -266,7 +266,7 @@ libero_long      # tarefas de horizonte longo (10 subtarefas)
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Practical tip</h3>
-<p class="dark:text-gray-300 light-text-gray-700">LIBERO is the de facto benchmark for reporting VLA fine-tuning. A high score only on <code class="font-mono text-xs">spatial</code> and low in <code class="font-mono text-xs">long</code> reveals that the policy does not compose skills—a sign of weakness over long horizons.</p>
+<p class="dark:text-gray-300 light-text-gray-700">LIBERO is still the most-cited sanity test for VLA fine-tuning, but, being saturated, it is not enough on its own: also report a harder benchmark or real-world evaluation. A high number only in <code class="font-mono text-xs">spatial</code> and low in <code class="font-mono text-xs">long</code> reveals that the policy does not compose skills—a sign of weakness over long horizons.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">LIBERO</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Lifelong learning.</p></div>
@@ -281,7 +281,7 @@ libero_long      # tarefas de horizonte longo (10 subtarefas)
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">5</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Format and normalization: RLDS/TFDS, heterogeneous action spaces</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Combining 60 datasets requires a common format: <strong class="text-blue-400">RLDS</strong> (Reinforcement Learning Datasets) on <strong class="text-blue-400">TFDS</strong>. The challenge is <strong class="text-blue-400">harmonization</strong>: each robot has its own action space (joints vs. Δpose, binary vs. continuous gripper, different frequencies). Without normalizing to a shared representation, co-training does not transfer.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Combining 60 datasets requires a common format: <strong class="text-blue-400">RLDS</strong> (Reinforcement Learning Datasets) on <strong class="text-blue-400">TFDS</strong>. The challenge is <strong class="text-blue-400">harmonization</strong>: each robot has its own action space (joints vs Δpose, binary vs continuous gripper, different frequencies). Without normalizing to a shared representation, co-training does not transfer. In the PyTorch ecosystem the de facto format is <strong class="text-blue-400">LeRobotDataset v3.0</strong> (lerobot ≥ 0.4): Parquet + MP4 per camera, with depth and language columns since v0.6 (07/2026); there is a conversion script from the v2.1 format.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code>import tensorflow_datasets as tfds
 # carregar uma fonte do OXE (formato RLDS)
@@ -299,7 +299,7 @@ for ep in ds.take(1):
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
 <li><strong>Action space</strong> — joints vs. EEF Δpose vs. velocity.</li>
 <li><strong>Gripper</strong> — binary, continuous, force.</li>
-<li><strong>Frequency</strong> — 3 Hz to 50+ Hz across datasets.</li>
+<li><strong>Frequency</strong> — from a few Hz to tens of Hz across datasets (e.g.: <code class="font-mono text-xs">lerobot/pusht</code> 10 fps, <code class="font-mono text-xs">lerobot/aloha_mobile_cabinet</code> 50 fps, read on 10/19/2026).</li>
 <li><strong>Cameras</strong> — number, resolution, viewpoint.</li>
 </ul>
 </div>
@@ -316,7 +316,7 @@ for ep in ds.take(1):
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">6</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Curation and licenses: quality, bias, how to contribute</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">More data isn't better data. <strong class="text-blue-400">Curation</strong> — filtering failed demos and balancing coverage often works better than increasing raw volume. Pay attention to <strong class="text-blue-400">embodiment bias</strong> (datasets dominated by one robot) and sometimes <strong class="text-blue-400">licenses</strong> from each source. Contributing is simple: standardize in the format and publish on the Hub.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">More data isn't better data. <strong class="text-blue-400">Curation</strong> — filtering failed demos and balancing coverage often works better than increasing raw volume. Pay attention to <strong class="text-blue-400">embodiment bias</strong> (datasets dominated by one robot) and sometimes <strong class="text-blue-400">licenses</strong> from each source. Contributing is simple: standardize on the format and publish to the Hub (81,292 datasets with the LeRobot tag as of 10/19/2026). <strong class="text-blue-400">The 2026 turning point is egocentric human video</strong> as the main source of pre-training: Figure's Index (08/2026) took Helix 2.5's zero-shot success from 9% to 56% in new homes (09/2026); NVIDIA cites "20,000+ hours" of human egocentric video in GR00T N1.7; EgoVerse (04/2026) is a platform and dataset of human egocentric data for robotics (per summaries, 1,362 h). Among open robot models, MolmoAct 2 (05/2026) published all of its data, including a bimanual YAM dataset with more than 720 h. License remains a filter: Index is closed.</p>
 <div class="space-y-6 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
@@ -373,13 +373,14 @@ for ep in ds.take(1):
 <div class="bg-gradient-to-br dark:from-blue-900/40 dark:to-dark-800 light-bg-white rounded-xl border border-blue-500/30 p-8">
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900 mb-6">✅ Module summary</h2>
 <div class="space-y-3 mb-8">
-<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Open X-Embodiment</strong><span class="dark:text-gray-400 light-text-gray-600"> — 1M+ trajectories, 22 bodies; the foundation for generalist models.</span></div></div>
+<div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Open X-Embodiment</strong><span class="dark:text-gray-400 light-text-gray-600"> — 1M+ trajectories, 22 embodiments (2023 paper); the basis of generalists, now supplemented with egocentric human video.</span></div></div>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">RT-X</strong><span class="dark:text-gray-400 light-text-gray-600"> — Cross-embodiment co-training enables positive transfer.</span></div></div>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">DROID and LIBERO</strong><span class="dark:text-gray-400 light-text-gray-600"> — in-the-wild diversity and transfer benchmark.</span></div></div>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">RLDS + harmonization</strong><span class="dark:text-gray-400 light-text-gray-600"> — Heterogeneous action spaces need a shared representation.</span></div></div>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Curation &gt; volume</strong><span class="dark:text-gray-400 light-text-gray-600"> — data quality, bias, and licensing determine its value.</span></div></div>
 </div>
-<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Next track</h3><p class="dark:text-gray-300 light-text-gray-700">Track 3 — Advanced and Strategic: sim-to-real, humanoids, hybrid architectures, and the $111B market. You already have the tools; now explore the frontier.</p></div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Next track</h3><p class="dark:text-gray-300 light-text-gray-700">Track 3 — Advanced and Strategic: sim-to-real, humanoids, hybrid architectures, market, and frontier. You already have the tools; now the frontier.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Updated in Oct/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Back to the track</a>
 <a class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition" href="../trilha3/">Go to Track 3 →</a>

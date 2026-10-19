@@ -174,10 +174,10 @@
 </div>
 </div>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
-<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Datos de investigación</h3>
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Qué observar (oct/2026)</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>99% → ~30%</strong> — caída típica del success rate de una política sim-only transferida de forma ingenua al entorno real sin mitigación.</li>
-<li><strong>10.000×+</strong> — ventaja en el throughput de recolección en simulación con GPU paralela (Isaac Lab) frente a la teleoperación real.</li>
+<li><strong>Caída sim → real</strong> — no existe un número "típico" confiable: el tamaño de la caída depende de la tarea, del robot y del simulador. Mide la tuya (tema 6).</li>
+<li><strong>Sim en lote en la GPU</strong> — MuJoCo Warp (MJWarp, oficial desde MuJoCo 3.5, feb/2026), Newton 1.0 (GTC, mar/2026) e Isaac Lab 3.0 EA (sep/2026, aún sin release final) existen para simular miles de entornos en paralelo. NVIDIA afirma mejoras de velocidad de Newton que no fueron verificadas de forma independiente.</li>
 <li><strong>La visión domina</strong> — en manipulación, la brecha visual suele superar la brecha dinámica como causa de fallas.</li>
 </ul>
 </div>
@@ -276,7 +276,7 @@ def randomize(env):
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">4</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🪞 Identificación del sistema y gemelos digitales</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">DR cubre la incertidumbre; <strong class="text-purple-400">identificación del sistema (sysID)</strong> la reduce desde el origen. Al medir el robot real —masas, centros de inercia, fricción de las articulaciones, latencia de control— calibras el simulador para reproducir el hardware específico. El resultado es un <strong>gemelo digital</strong>: un gemelo digital fiel que sirve como campo de entrenamiento y banco de pruebas seguro.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">DR cubre la incertidumbre; <strong class="text-purple-400">identificación del sistema (sysID)</strong> la reduce desde el origen. Al medir el robot real —masas, centros de inercia, fricción de las articulaciones, latencia de control— calibras el simulador para reproducir el hardware específico. El resultado es un <strong>gemelo digital</strong>: un gemelo digital fiel que sirve de campo de entrenamiento y de banco de pruebas seguro. Desde MuJoCo 3.5 (feb/2026) hay un toolbox Python oficial de identificación de sistemas, con modelado de retardos de actuador y de sensor — la versión actual es la 3.16 (oct/2026).</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Qué habilita un digital twin</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
@@ -308,7 +308,7 @@ theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">5</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🧪 Coentrenamiento sim+real y fine-tuning con pocas demos</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La receta práctica dominante en 2026 no es «sim O real»: es <strong class="text-purple-400">coentrenamiento</strong>. La simulación proporciona <em>cobertura</em> económica (millones de variaciones), y un puñado de demostraciones reales proporciona <em>fidelidad</em> final. Combinar ~95% sim + ~5% real, o hacer un fine-tuning corto con datos reales, suele superar cualquiera de las dos opciones por separado.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">La receta práctica dominante en 2026 no es «sim O real»: es <strong class="text-purple-400">coentrenamiento</strong>. La simulación proporciona <em>cobertura</em> económica (millones de variaciones), y un puñado de demostraciones reales proporciona <em>fidelidad</em> final. Mezclar sim y real en el mismo batch (la proporción correcta se encuentra midiendo, no hay receta universal), o hacer un fine-tuning corto con datos reales, suele superar a cualquiera de los dos por separado. Ejemplo de 2026: el System 0 de Helix 02 de Figure (controlador de cuerpo completo a 1 kHz) se entrenó con más de 1.000 h de movimiento humano retargeted y RL sim-to-real, según Figure (ene/2026).</p>
 <div class="space-y-4 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">1</div>
@@ -331,7 +331,7 @@ theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Co-training</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mezcla simulación y mundo real.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Eficiencia de muestreo</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Bastan pocas demos reales.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Fine-tuning</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Ajuste breve en el robot objetivo.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">95/5</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Mezcla típica de simulación y mundo real.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-purple-400 mb-1">Mezcla sim/real</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Proporción ajustada midiendo.</p></div>
 </div>
 </section>
 <!-- TÓPICO 6 -->
@@ -382,6 +382,7 @@ theta_star = minimize(loss, init=spec_sheet) # calibra massa/atrito/delay
 <div class="flex gap-3"><span class="text-purple-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Evaluación honesta</strong><span class="dark:text-gray-400 light-text-gray-600"> — solo cuenta la tasa de éxito real en datos held-out; el sim-score engaña.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-purple-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">3.2 — Humanoides: Figure, Tesla, Unitree, GR00T. Donde la transferencia de simulación a la realidad se encuentra con los cuerpos de propósito general.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
 <a class="text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition" href="modulo-3-2.html">Próximo módulo →</a>

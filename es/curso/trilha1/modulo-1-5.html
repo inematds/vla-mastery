@@ -242,14 +242,14 @@ execute(A[:exec_horizon])               # receding horizon</code></pre>
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">➡️ Flow Matching y su uso en π0</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">Flow Matching</strong> generaliza la difusión: en lugar de un proceso estocástico de denoising, aprende un <strong class="text-emerald-400">campo vectorial</strong> que transforma ruido→acción mediante una <strong class="text-emerald-400">ODE continua</strong>. Con <strong class="text-emerald-400">conditional flow matching</strong>, el objetivo de entrenamiento es simplemente la velocidad a lo largo de un camino (frecuentemente recto) entre el ruido y los datos: un objetivo más simple y estable. El <strong class="text-emerald-400">π0</strong> usa exactamente esto en tu action expert para generar acciones continuas y fluidas a 50Hz.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">Flow Matching</strong> generaliza la difusión: en lugar de un proceso estocástico de denoising, aprende un <strong class="text-emerald-400">campo vectorial</strong> que transforma ruido→acción mediante una <strong class="text-emerald-400">ODE continua</strong>. Con <strong class="text-emerald-400">conditional flow matching</strong>, el objetivo de entrenamiento es simplemente la velocidad a lo largo de un camino (frecuentemente recto) entre el ruido y los datos: un objetivo más simple y estable. El <strong class="text-emerald-400">π0</strong> usa exactamente eso en su action expert para generar acción continua fluida a 50Hz (según PI). En 2026 flow matching y DiT de acción son la base común: el LBM de Boston Dynamics + TRI (ago/2025) controla todo el Atlas a 30 Hz con diffusion transformer y flow matching; el S1 del GR00T N1.7 es un DiT de 32 capas; SmolVLA (450M) también genera acción por flow matching.</p>
 <div class="grid md:grid-cols-2 gap-6 mb-6">
 <div class="dark:bg-emerald-900/20 light-bg-white rounded-xl border border-emerald-500/30 p-6">
 <h4 class="font-bold text-emerald-400 mb-4">✓ Ventajas del flow matching</h4>
 <ul class="space-y-3 dark:text-gray-300 light-text-gray-700">
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Entrenamiento más simple y estable que DDPM.</span></li>
 <li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Las rutas rectas permiten menos pasos de inferencia.</span></li>
-<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Acción continua de alta frecuencia (π0 a 50Hz).</span></li>
+<li class="flex gap-2"><span class="text-emerald-400">✓</span><span>Acción continua de alta frecuencia (π0 a 50Hz, según PI).</span></li>
 </ul>
 </div>
 <div class="dark:bg-red-900/20 light-bg-white rounded-xl border border-red-500/30 p-6">
@@ -276,7 +276,7 @@ execute(A[:exec_horizon])               # receding horizon</code></pre>
 </div>
 <p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">El costo central de las políticas generativas es el <strong class="text-emerald-400">número de evaluaciones de función (NFE)</strong> — cada paso de denoising/integración es un forward pass. El DDPM clásico usa de decenas a cientos de pasos, inviable a 50Hz. Soluciones: <strong class="text-emerald-400">samplers rápidos (DDIM)</strong>, <strong class="text-emerald-400">consistency models</strong> (generan en 1-2 pasos) y <strong class="text-emerald-400">destilación</strong> de un modelo lento a uno rápido. El flow matching con trayectorias rectas ya reduce el NFE de forma natural.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
-<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Presupuesto de pasos</h3>
+<h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Presupuesto de pasos (orden de magnitud)</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
 <li><strong>50-100 NFE</strong> — DDPM ingenuo; alta calidad, alta latencia.</li>
 <li><strong>~10 NFE</strong> — DDIM / flow con trayectoria recta; buen equilibrio.</li>
@@ -311,6 +311,7 @@ exemplos        Diffusion Policy,π0 RT-2, OpenVLA, FAST</code></pre>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
 <p class="dark:text-gray-300 light-text-gray-700">Tarea diestra y continua → difusión/flow. Integración sencilla sobre un VLM y entrenamiento autoregresivo unificado → tokens (y el Módulo 1.6 muestra cómo FAST hace que esto sea competitivo).</p>
+<p class="dark:text-gray-300 light-text-gray-700 mt-3">En 2026 la difusión también pasó a generar el <strong class="text-primary">mundo</strong>, no solo la acción: los <strong class="text-primary">World Action Models</strong> predicen video futuro y acciones juntos. DreamZero (NVIDIA, arXiv feb/2026) es un modelo de difusión de video autorregresivo de 14B que controla el robot en lazo cerrado a 7 Hz y, según los autores, generaliza más de 2× mejor que los VLAs de punta en tareas y entornos nuevos; el GR00T N2, anunciado para finales de 2026, sigue esa arquitectura. LeRobot 0.6 ya incluye políticas de este tipo (VLA-JEPA, FastWAM, LingBot-VA).</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Expresividad</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Capturar distribuciones ricas.</p></div>
@@ -330,6 +331,7 @@ exemplos        Diffusion Policy,π0 RT-2, OpenVLA, FAST</code></pre>
 <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Costo y trade-off</strong><span class="dark:text-gray-400 light-text-gray-600"> — NFE/destilación controlan la latencia; la difusión y AR no tienen un único ganador.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-emerald-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">1.6 — Tokenización de acciones: discreta, continua y FAST; cerramos la Trilha 1.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
 <a class="text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition" href="modulo-1-6.html">Próximo módulo →</a>

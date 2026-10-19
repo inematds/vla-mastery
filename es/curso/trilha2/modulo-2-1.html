@@ -180,7 +180,7 @@
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Consejo práctico</h3>
-<p class="dark:text-gray-300 light-text-gray-700">JAX (con MJX/Flax) destaca en simulación masivamente paralela y física diferenciable, pero el <em>deploy</em> en un robot real y la mayoría de los checkpoints VLA están en PyTorch. Aprende ambos; empieza por PyTorch.</p>
+<p class="dark:text-gray-300 light-text-gray-700">JAX (con MJX/Flax) destaca en simulación masivamente paralela y física diferenciable, pero el <em>deploy</em> en robot real y la mayoría de los checkpoints VLA viven en PyTorch. Conoce los dos; empieza por PyTorch. Versiones de referencia en oct/2026: LeRobot 0.6 pide Python 3.12 y PyTorch 2.7 o más nuevo; openpi (π0/π0.5, nacido en JAX) también tiene soporte para PyTorch.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Modo eager</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Define-by-run, depuración nativa.</p></div>
@@ -400,7 +400,7 @@ def act(obs):
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">torch.compile</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Fusión mediante Inductor.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">inference_mode</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Sin autograd, más rápido.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Action chunking</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Amortiza la latencia.</p></div>
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Export</p><p class="text-xs dark:text-gray-400 light-text-gray-600">TorchScript/ONNX para edge.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Export</p><p class="text-xs dark:text-gray-400 light-text-gray-600">ONNX/TensorRT para edge (GR00T N1.7 ya exporta a ambos).</p></div>
 </div>
 </section>
 <section class="mb-12">
@@ -414,6 +414,7 @@ def act(obs):
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">FSDP + compile</strong><span class="dark:text-gray-400 light-text-gray-600"> — escalar el entrenamiento y reducir la latencia de inferencia.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">2.2 — LeRobot: framework end-to-end de Hugging Face, donde todo este stack se convierte en un flujo de grabar → entrenar → deploy.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Actualizado en oct/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Volver a la ruta</a>
 <a class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-2.html">Próximo módulo →</a>
