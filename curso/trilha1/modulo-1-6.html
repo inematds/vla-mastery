@@ -233,7 +233,7 @@ tokens = 50 × 7 = 350  ← maioria redundante
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">4</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⚡ FAST: tokenização por DCT + BPE</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">FAST</strong> (Frequency-space Action Sequence Tokenization, Physical Intelligence, 2025) inverte a lógica: em vez de tokenizar no tempo, transforma a trajetória para o <strong class="text-emerald-400">domínio da frequência via DCT</strong> (a mesma transformada do JPEG), quantiza os coeficientes e os comprime com <strong class="text-emerald-400">BPE</strong>. Como sinais suaves concentram energia em poucas frequências baixas, o resultado são <strong class="text-emerald-400">poucos tokens de alta fidelidade</strong>. FAST torna VLAs autoregressivos competitivos com difusão em controle de alta frequência — RT-2/OpenVLA-style, mas dexterosos.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed"><strong class="text-emerald-400">FAST</strong> (Frequency-space Action Sequence Tokenization, Physical Intelligence, 2025) inverte a lógica: em vez de tokenizar no tempo, transforma a trajetória para o <strong class="text-emerald-400">domínio da frequência via DCT</strong> (a mesma transformada do JPEG), quantiza os coeficientes e os comprime com <strong class="text-emerald-400">BPE</strong>. Como sinais suaves concentram energia em poucas frequências baixas, o resultado são <strong class="text-emerald-400">poucos tokens de alta fidelidade</strong>. Segundo a PI, FAST torna VLAs autoregressivos competitivos com difusão em controle de alta frequência e treina "5 vezes mais rápido" — RT-2/OpenVLA-style, mas dexterosos. O checkpoint <code>pi0_fast_base</code> é aberto no openpi (Apache-2.0) e o LeRobot suporta Pi0-FAST desde a v0.5 (mar/2026).</p>
 <div class="space-y-6 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
@@ -260,6 +260,7 @@ tokens = 50 × 7 = 350  ← maioria redundante
 <div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Por que FAST importa</h3>
 <p class="dark:text-gray-300 light-text-gray-700">FAST reduz drasticamente o comprimento de sequência mantendo fidelidade, acelerando o treino e habilitando VLAs autoregressivos para tarefas dexterosas. É a ponte entre a simplicidade do paradigma token e a exigência de alta frequência da manipulação fina.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mt-3">Em 2026 o FAST ganhou uma <strong class="text-emerald-400">reimplementação aberta</strong>, com dados abertos, no MolmoAct 2 (Ai2, mai/2026), que chega a 97,2% no LIBERO (98,1% no modo Think) e, segundo a Ai2, faz uma chamada de ação em 180 ms contra 6.700 ms do MolmoAct 1. Os autoregressivos voltaram com força: o Galaxea G0.5 (checkpoint jun/2026) usa "um único stream autoregressivo" para raciocínio e ação — mas atenção, os pesos têm <strong class="text-emerald-400">licença não comercial</strong>.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">DCT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Transformada para frequência.</p></div>
@@ -284,9 +285,9 @@ FAST        poucos         alta         rápido</code></pre>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 O ganho do FAST</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>↓ comprimento</strong> — ordens de magnitude menos tokens que binning por timestep.</li>
-<li><strong>↑ velocidade</strong> — treino autoregressivo muito mais rápido.</li>
-<li><strong>= fidelidade</strong> — qualidade comparável à difusão em tarefas dexterosas.</li>
+<li><strong>↓ comprimento</strong> — muito menos tokens que binning por timestep em sinais suaves.</li>
+<li><strong>↑ velocidade</strong> — treino autoregressivo mais rápido ("5 vezes", segundo a PI).</li>
+<li><strong>= fidelidade</strong> — qualidade comparável à difusão em tarefas dexterosas, segundo a PI.</li>
 </ul>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
@@ -328,7 +329,7 @@ FAST        poucos         alta         rápido</code></pre>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
-<p class="dark:text-gray-300 light-text-gray-700">Em 2026, dois caminhos vencem na prática: <strong class="text-primary">FAST + backbone autoregressivo</strong> (treino simples e rápido) ou <strong class="text-primary">flow matching</strong> (ação contínua fluida). Comece pelo que sua stack já suporta e itere.</p>
+<p class="dark:text-gray-300 light-text-gray-700">Em out/2026, dois caminhos vencem na prática: <strong class="text-primary">FAST + backbone autoregressivo</strong> (π0-FAST, MolmoAct 2, Galaxea G0.5) ou <strong class="text-primary">flow matching / DiT</strong> (π0/π0.5, SmolVLA, GR00T N1.7). Há também híbridos com os dois ramos, como o Wall-OSS-0.5 (jun/2026). No LeRobot 0.6 todos viram um <code>--policy.type</code>: comece pelo que sua stack já suporta e itere.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Task dynamics</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Lenta vs dinâmica.</p></div>
@@ -348,6 +349,7 @@ FAST        poucos         alta         rápido</code></pre>
 <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">A representação molda a cabeça</strong><span class="dark:text-gray-400 light-text-gray-600"> — e fecha a teoria que sustenta toda a prática da Trilha 2.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Próximo: Trilha 2 — Ferramentas</h3><p class="dark:text-gray-300 light-text-gray-700">M2.1 — Python + PyTorch: a stack dominante para implementar tudo que você aprendeu aqui, de tensores e LoRA a inferência a 10-50Hz.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Atualizado em out/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Voltar à trilha</a>
 <a class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="../trilha2/">Ir para a Trilha 2 →</a>

@@ -133,6 +133,7 @@ for (obs, action) in demo_loader:
 <div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Por que BC é o padrão</h3>
 <p class="dark:text-gray-300 light-text-gray-700">Coletar demos é mais seguro e barato que deixar um robô explorar por reforço no mundo real (onde falhas quebram hardware). BC transforma um problema de controle num problema de aprendizado supervisionado bem-comportado.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mt-3">Atualização 2026: BC virou o <strong class="text-emerald-400">pré-treino</strong>, não o fim. O π*0.6 com Recap (PI, nov/2025) refina a política com RL e correções sobre a própria experiência; o RL Token (PI, mar/2026) treina um ator-crítico pequeno online em poucas horas, ou minutos, de dados. A ordem que se firmou é: imitar → rodar → falhar → corrigir.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Supervised policy</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Aprender ação como rótulo.</p></div>
@@ -221,7 +222,19 @@ for (obs, action) in demo_loader:
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
-<p class="dark:text-gray-300 light-text-gray-700">DAgger puro é caro (precisa do expert no loop). Na prática, muitos times injetam <strong class="text-primary">perturbações nas demos</strong> (ruído na pose) e gravam recuperações intencionais — DAgger "barato" que melhora robustez sem rotulagem online.</p>
+<p class="dark:text-gray-300 light-text-gray-700">DAgger puro é caro (precisa do expert no loop). Na prática, muitos times injetam <strong class="text-primary">perturbações nas demos</strong> (ruído na pose) e gravam recuperações intencionais — DAgger "barato" que melhora robustez sem rotulagem online. Desde a v0.6.0 (jul/2026) o LeRobot tem o <code>lerobot-rollout</code> com estratégia DAgger: a política roda no robô e o humano assume pelo braço líder quando ela erra, gravando as correções num dataset.</p>
+<div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mt-4 overflow-x-auto">
+<pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># LeRobot 0.6.1 — da doc oficial; não rodado aqui (precisa do braço SO-101)
+lerobot-rollout \
+  --strategy.type=dagger \
+  --policy.path=&lt;seu usuário&gt;/minha_politica \
+  --robot.type=so101_follower \
+  --robot.port=/dev/ttyACM0 \
+  --teleop.type=so101_leader \
+  --teleop.port=/dev/ttyACM1 \
+  --dataset.repo_id=&lt;seu usuário&gt;/correcoes_dagger \
+  --dataset.single_task="Pegue o bloco"</code></pre>
+</div>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">DAgger</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Agregar rótulos on-policy.</p></div>
@@ -268,7 +281,7 @@ for (obs, action) in demo_loader:
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">5</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🧹 Qualidade de dados: cobertura e diversidade</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Em imitation learning, <strong class="text-emerald-400">dados &gt; arquitetura</strong>. O que importa não é volume bruto, mas <strong class="text-emerald-400">cobertura</strong> (estados raros e de recuperação representados), <strong class="text-emerald-400">diversidade</strong> (objetos, posições, iluminação, distratores) e consistência. Demos sub-ótimas ou contraditórias confundem a política; demos limpas e variadas generalizam. Um corpus pequeno mas diverso muitas vezes bate um grande mas redundante.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Em imitation learning, <strong class="text-emerald-400">dados &gt; arquitetura</strong>. O que importa não é volume bruto, mas <strong class="text-emerald-400">cobertura</strong> (estados raros e de recuperação representados), <strong class="text-emerald-400">diversidade</strong> (objetos, posições, iluminação, distratores) e consistência. Demos sub-ótimas ou contraditórias confundem a política; demos limpas e variadas generalizam. Um corpus pequeno mas diverso muitas vezes bate um grande mas redundante. Em 2026 a cobertura passou a vir também de <strong class="text-emerald-400">vídeo humano egocêntrico</strong>: segundo a Figure (set/2026), o pré-treino no dataset Index levou o sucesso zero-shot do Helix 2.5 de 9% para 56%; o EgoVerse (abr/2026) é um dataset aberto desse tipo, e a NVIDIA diz que o GR00T N1.7 usou 20.000+ horas de vídeo egocêntrico humano.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Eixos de qualidade</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
@@ -294,7 +307,7 @@ for (obs, action) in demo_loader:
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">📏 Métricas: success rate e generalização</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A métrica soberana é o <strong class="text-emerald-400">success rate</strong> — fração de tentativas que completam a tarefa. Mas um número alto em cenas de treino engana. O teste honesto mede <strong class="text-emerald-400">generalização em três eixos</strong>: objetos novos, posições/cenas novas e instruções reformuladas. Avalie sempre com <strong class="text-emerald-400">N tentativas suficientes</strong> e protocolos OOD (out-of-distribution), reportando intervalo de confiança.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">A métrica soberana é o <strong class="text-emerald-400">success rate</strong> — fração de tentativas que completam a tarefa. Mas um número alto em cenas de treino engana. O teste honesto mede <strong class="text-emerald-400">generalização em três eixos</strong>: objetos novos, posições/cenas novas e instruções reformuladas. Avalie sempre com <strong class="text-emerald-400">N tentativas suficientes</strong> e protocolos OOD (out-of-distribution), reportando intervalo de confiança. Em simulação, o <code>lerobot-eval</code> do LeRobot 0.6 roda LIBERO, Meta-World, RoboTwin 2.0, RoboCasa365 e outros; mas o LIBERO está saturado em 2026 (OpenVLA-OFT 97,1%, X-VLA 98,1%, MolmoAct 2 97,2%), então ele não separa mais os modelos de ponta.</p>
 <div class="dark:bg-dark-950 light-bg-gray-100 rounded-xl border border-dark-600 light-border-gray-200 p-5 mb-6 overflow-x-auto">
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># Protocolo de avaliação honesto
 seen      = eval(policy, scenes_treino)      # baseline
@@ -305,7 +318,7 @@ report(success_rate, n=50, ci=0.95)</code></pre>
 </div>
 <div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Não confie só no número de treino</h3>
-<p class="dark:text-gray-300 light-text-gray-700">Uma política pode ter 95% in-distribution e 20% OOD. O valor de um VLA está justamente na generalização — meça os três eixos separadamente, ou estará otimizando a métrica errada.</p>
+<p class="dark:text-gray-300 light-text-gray-700">Uma política pode, por exemplo, acertar quase tudo in-distribution e muito menos OOD. O valor de um VLA está justamente na generalização — meça os três eixos separadamente, ou estará otimizando a métrica errada.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Success rate</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Métrica primária de tarefa.</p></div>
@@ -325,6 +338,7 @@ report(success_rate, n=50, ci=0.95)</code></pre>
 <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Multimodalidade</strong><span class="dark:text-gray-400 light-text-gray-600"> — MSE colapsa modos; políticas expressivas resolvem. Meça OOD.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-emerald-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">1.5 — Diffusion Policy e Flow Matching: as políticas expressivas que resolvem a multimodalidade.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Atualizado em out/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Voltar à trilha</a>
 <a class="text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition" href="modulo-1-5.html">Próximo módulo →</a>

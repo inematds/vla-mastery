@@ -103,7 +103,7 @@
 <a class="text-sm dark:text-gray-500 light-text-gray-500 hover:text-blue-400 mb-4 inline-block" href="index.html">← Voltar à Trilha 2</a>
 <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full mb-4">MÓDULO 2.5</span>
 <h1 class="text-3xl sm:text-4xl font-extrabold dark:text-white light-text-gray-900 mb-4">🦿 Hardware: Braços, Sensores, Edge Computing</h1>
-<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">A policy precisa de um corpo. Aqui você compara braços (SO-101, Franka, UR, xArm), garras e tátil, câmeras RGB-D, compute de borda Jetson Orin/Thor e montagens de teleoperação — do kit de $100 à plataforma de pesquisa.</p>
+<p class="text-lg dark:text-gray-400 light-text-gray-600 max-w-3xl">A policy precisa de um corpo. Aqui você compara braços (SO-101, Franka, UR, xArm), garras e tátil, câmeras RGB-D, compute de borda Jetson Orin/Thor e montagens de teleoperação — do braço de entrada de centenas de dólares à plataforma de pesquisa.</p>
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
 <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Tópicos</div></div>
 <div class="dark:bg-dark-800 light-bg-white rounded-lg p-3 border border-dark-600 light-border-gray-200"><div class="text-xl font-bold text-blue-400">40</div><div class="text-xs dark:text-gray-400 light-text-gray-500">Minutos</div></div>
@@ -148,13 +148,13 @@
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">1</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Braços manipuladores: SO-101, Franka, UR, xArm</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Braços diferem em três eixos: <strong class="text-blue-400">DOF</strong> (graus de liberdade), <strong class="text-blue-400">payload</strong> e <strong class="text-blue-400">repetibilidade</strong>. O <strong class="text-blue-400">SO-101</strong> é o ponto de entrada (~$100, servos Feetech); <strong class="text-blue-400">Franka Panda</strong> é o padrão de pesquisa com 7 DOF e controle de torque/força; <strong class="text-blue-400">UR</strong> e <strong class="text-blue-400">xArm</strong> são cobots industriais.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Braços diferem em três eixos: <strong class="text-blue-400">DOF</strong> (graus de liberdade), <strong class="text-blue-400">payload</strong> e <strong class="text-blue-400">repetibilidade</strong>. O <strong class="text-blue-400">SO-101</strong> é o ponto de entrada (servos Feetech; ~US$ 100–200 por braço em DIY, estimativa, e ~US$ 433 o par líder + seguidor montado, segundo a revenda OpenELAB em 2026); a <strong class="text-blue-400">Franka</strong> (hoje FR3, usada no DROID) é o padrão de pesquisa com 7 DOF e controle de torque/força; <strong class="text-blue-400">UR</strong> e <strong class="text-blue-400">xArm</strong> são cobots industriais.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Comparativo rápido</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>SO-101</strong> — ~$100, 6 DOF, ideal para aprender e coletar demos.</li>
-<li><strong>Franka Panda</strong> — 7 DOF, controle de força, queridinho da academia.</li>
-<li><strong>UR5e / UR10e</strong> — cobot industrial, certificação de segurança.</li>
+<li><strong>SO-101</strong> — braço de entrada do LeRobot (e o único do LeLab, out/2026), 6 DOF, ideal para aprender e coletar demos.</li>
+<li><strong>Franka FR3</strong> — 7 DOF, controle de força, referência da academia; FR3 Duo bimanual mostrado como protótipo (Automatica 2025), sem preço público.</li>
+<li><strong>UR5e / UR10e / UR15</strong> — cobots industriais; segundo a UR, o UR15 tem TCP de até 5 m/s e carga de 15 kg, e o "AI Accelerator" é um kit com a NVIDIA sobre Jetson AGX Orin.</li>
 <li><strong>xArm 7</strong> — bom custo-benefício de pesquisa, payload médio.</li>
 </ul>
 </div>
@@ -162,11 +162,11 @@
 <pre class="font-mono text-sm dark:text-gray-300 light-text-gray-700"><code># controlar um Franka via libfranka / franka_ros2 (controle de torque)
 ros2 launch franka_bringup franka.launch.py robot_ip:=172.16.0.2
 # enviar setpoints de junta a partir da policy VLA -&gt; /joint_trajectory
-# repetibilidade típica: Franka ±0.1mm · SO-101 ~mm (servos de hobby)</code></pre>
+# repetibilidade: confira a ficha técnica do fabricante; servos de hobby (SO-101) ficam muito atrás</code></pre>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
-<p class="dark:text-gray-300 light-text-gray-700">Controle por <strong>torque/admittance</strong> (Franka) permite contato seguro; braços só por posição precisam de muito cuidado em inserção. Para começar com VLA, o SO-101 cobre 90% do aprendizado a 1% do custo.</p>
+<p class="dark:text-gray-300 light-text-gray-700">Controle por <strong>torque/admittance</strong> (Franka) permite contato seguro; braços só por posição precisam de muito cuidado em inserção. Para começar com VLA, o SO-101 cobre a maior parte do aprendizado por uma fração do custo.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">DOF</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Graus de liberdade.</p></div>
@@ -257,7 +257,7 @@ ros2 launch realsense2_camera rs_launch.py \
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">4</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Compute de borda: Jetson Orin/Thor, throughput vs consumo</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Rodar o VLA <strong class="text-blue-400">on-board</strong> elimina latência de rede. A linha <strong class="text-blue-400">Jetson</strong> domina: <strong class="text-blue-400">Orin</strong> (AGX/NX) entrega dezenas a centenas de TOPS dentro de um envelope térmico de 15–60 W; <strong class="text-blue-400">Thor</strong> (Blackwell, 2025) eleva a barra para foundation models de robótica no edge. A chave é casar quantização com o envelope de potência.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Rodar o VLA <strong class="text-blue-400">on-board</strong> elimina latência de rede. A linha <strong class="text-blue-400">Jetson</strong> domina: <strong class="text-blue-400">Orin</strong> (Nano/NX/AGX) cobre de policies pequenas a médias num envelope de dezenas de watts; <strong class="text-blue-400">Thor</strong> (GPU Blackwell, ago/2025; segundo a imprensa, 2.070 TFLOPS FP4, 128 GB e 130 W) eleva a barra para foundation models de robótica no edge — segundo a NVIDIA, o Cosmos 3 Edge (4B, 07/2026) roda em RTX, DGX e Jetson Thor; o GR00T N1.7 (3B, 2026) exporta para ONNX e TensorRT, o caminho para embarcar. <strong class="text-blue-400">Preços mudaram:</strong> segundo o cnx-software (jul/2026), o dev kit Jetson AGX Thor passou de US$ 3.499 para US$ 5.499 e o Orin Nano Super dev kit de US$ 249 para US$ 399, sem anúncio e atribuído a custo de memória. A chave é casar quantização com o envelope de potência.</p>
 <div class="space-y-6 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">1</div>
@@ -291,7 +291,7 @@ tegrastats                  # monitorar GPU/CPU/EMC e temperatura
 trtexec --onnx=policy.onnx --int8 --saveEngine=policy.engine</code></pre>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Jetson Orin</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Edge, 15–60 W.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Jetson Orin</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Edge, policies pequenas/médias.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Jetson Thor</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Blackwell p/ FMs.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">TensorRT</p><p class="text-xs dark:text-gray-400 light-text-gray-600">INT8/FP8 no edge.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Envelope térmico</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Throughput sustentado.</p></div>
@@ -311,6 +311,8 @@ trtexec --onnx=policy.onnx --int8 --saveEngine=policy.engine</code></pre>
 <li><strong>VR (Quest/Vision Pro)</strong> — captura 6-DOF da mão, bom para humanoides.</li>
 <li><strong>Luvas</strong> — mãos multi-dedo, dados de destreza.</li>
 <li><strong>Espelhamento cinemático</strong> — retarget de pose humana ao robô.</li>
+<li><strong>VR para SO-101 (Isaac Teleop, 07/2026)</strong> — teleoperar o SO-101 com controle de VR via CloudXR/OpenXR, ligado ao ecossistema LeRobot.</li>
+<li><strong>Vídeo humano egocêntrico</strong> — em 2026 virou grande fonte de pré-treino, sem robô na coleta: Index da Figure (08/2026), EgoVerse (04/2026), "20.000+ horas" de vídeo humano egocêntrico citadas pela NVIDIA no GR00T N1.7. Ver módulo 2.6.</li>
 </ul>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
@@ -348,14 +350,14 @@ trtexec --onnx=policy.onnx --int8 --saveEngine=policy.engine</code></pre>
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">6</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">🔹 Orçamento e montagem: de $100 à plataforma de pesquisa</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O custo de entrada despencou. Um setup completo de aprendizado VLA — <strong class="text-blue-400">SO-101 leader + follower + 2 câmeras + Jetson</strong> — fica em centenas de dólares, contra dezenas de milhares de uma célula Franka. A barreira hoje é menos dinheiro e mais método.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">O custo de entrada despencou. Um setup completo de aprendizado VLA — <strong class="text-blue-400">SO-101 leader + follower + 2 câmeras + Jetson</strong> — fica perto de mil dólares em out/2026, somando os preços citados abaixo, muito abaixo de uma célula de pesquisa com Franka. A barreira hoje é menos dinheiro e mais método.</p>
 <div class="dark:bg-blue-900/20 light-bg-white rounded-xl border border-blue-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-blue-400 mb-3">📊 Faixas de orçamento</h3>
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
-<li><strong>$100–300</strong> — SO-100/SO-101 single, câmera USB, treina em laptop/cloud.</li>
-<li><strong>$500–1k</strong> — leader+follower, 2 câmeras, Jetson Orin Nano.</li>
-<li><strong>$10k+</strong> — ALOHA bimanual, RealSense múltiplas, workstation.</li>
-<li><strong>$50k+</strong> — Franka/UR com F/T, célula de pesquisa completa.</li>
+<li><strong>Entrada</strong> — SO-101 DIY, ~US$ 100–200 por braço (estimativa, 2026), câmera USB, treina em laptop/cloud.</li>
+<li><strong>Intermediário</strong> — par SO-101 líder + seguidor montado (~US$ 433, segundo a OpenELAB) + Jetson Orin Nano Super dev kit (US$ 399, segundo o cnx-software, jul/2026) + 2 câmeras.</li>
+<li><strong>Robô de mesa</strong> — Reachy Mini (HF/Pollen), US$ 299 Lite / US$ 449 Wireless no lançamento, segundo a imprensa; tem app/SDK próprios e não é hardware nativo do LeRobot.</li>
+<li><strong>Pesquisa</strong> — ALOHA bimanual, Franka/UR com F/T, Jetson AGX Thor (US$ 5.499 desde jul/2026, segundo o cnx-software); Franka sem preço público: peça cotação.</li>
 </ul>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
@@ -363,7 +365,7 @@ trtexec --onnx=policy.onnx --int8 --saveEngine=policy.engine</code></pre>
 <p class="dark:text-gray-300 light-text-gray-700">Comece barato, treine na cloud, faça inferência no edge depois. A montagem do SO-101 + LeRobot é o caminho mais curto entre zero e uma policy rodando num braço real.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
-<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Entrada</p><p class="text-xs dark:text-gray-400 light-text-gray-600">SO-101 ~$100.</p></div>
+<div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Entrada</p><p class="text-xs dark:text-gray-400 light-text-gray-600">SO-101, centenas de US$.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Intermediário</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Leader+follower+Jetson.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Pesquisa</p><p class="text-xs dark:text-gray-400 light-text-gray-600">ALOHA / Franka.</p></div>
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-blue-400 mb-1">Método &gt; verba</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Dado bom importa mais.</p></div>
@@ -380,6 +382,7 @@ trtexec --onnx=policy.onnx --int8 --saveEngine=policy.engine</code></pre>
 <div class="flex gap-3"><span class="text-blue-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Custo despencou</strong><span class="dark:text-gray-400 light-text-gray-600"> — VLA acessível; método importa mais que verba.</span></div></div>
 </div>
 <div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-blue-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">2.6 — Datasets: Open X-Embodiment, DROID e LIBERO, o combustível que treina tudo o que vimos.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Atualizado em out/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Voltar à trilha</a>
 <a class="text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition" href="modulo-2-6.html">Próximo módulo →</a>

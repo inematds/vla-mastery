@@ -191,12 +191,14 @@
 <ul class="space-y-2 dark:text-gray-300 light-text-gray-700">
 <li><strong>OpenVLA</strong> — 7B, base Llama 2, Prismatic VLM.</li>
 <li><strong>π0</strong> — base PaliGemma 3B + action expert via flow matching.</li>
-<li><strong>RT-2</strong> — PaLI-X / PaLM-E (até 55B), fechado.</li>
+<li><strong>RT-2</strong> — PaLI-X / PaLM-E (até 55B, segundo o artigo do RT-2, 2023), fechado.</li>
+<li><strong>SmolVLA</strong> (jun/2025) — 450M, base SmolVLM2-500M; roda em hardware de consumo (Apache-2.0).</li>
+<li><strong>GR00T N1.7</strong> (2026) — 3B; o S2 é o Cosmos-Reason2-2B (arquitetura Qwen3-VL) e o S1 um DiT de 32 camadas.</li>
 </ul>
 </div>
 <div class="dark:bg-primary/10 light-bg-gray-50 rounded-xl border border-primary/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-primary mb-3">⚡ Dica prática</h3>
-<p class="dark:text-gray-300 light-text-gray-700">O tamanho do backbone é um trade-off direto com a <strong class="text-primary">latência de inferência</strong>. Modelos de 7B exigem GPU forte e action chunking para rodar a 10-50Hz; bases menores (3B) facilitam deploy em borda.</p>
+<p class="dark:text-gray-300 light-text-gray-700">O tamanho do backbone é um trade-off direto com a <strong class="text-primary">latência de inferência</strong>. Modelos de 7B exigem GPU forte e action chunking para rodar a 10-50Hz; bases menores (0,45B–3B) facilitam deploy em borda. Em 2026 a tendência é separar o backbone lento de um controlador rápido (veja o tópico 6).</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">PaliGemma</p><p class="text-xs dark:text-gray-400 light-text-gray-600">VLM base do π0.</p></div>
@@ -301,7 +303,7 @@ latent = CrossAttn(latent, img_tok)  # consulta a imagem</code></pre>
 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl flex-shrink-0">6</span>
 <h2 class="text-2xl font-bold dark:text-white light-text-gray-900">⏱ O loop de controle: Hz, latência, action chunking</h2>
 </div>
-<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Manipulação fina precisa de comandos a <strong class="text-emerald-400">~50Hz</strong>, mas um VLA de 7B não inferе tão rápido. A solução é o <strong class="text-emerald-400">action chunking</strong>: o modelo prevê um <strong class="text-emerald-400">bloco</strong> de H ações futuras de uma vez (ex: 16-50 passos), que são executadas abertas enquanto a próxima inferência roda. Com <strong class="text-emerald-400">receding horizon</strong>, re-prevê antes do chunk acabar, mantendo reatividade. Isso amortiza a latência da rede e suaviza a trajetória — ideia introduzida pelo ACT e adotada por Diffusion Policy e π0.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mb-6 leading-relaxed">Manipulação fina precisa de comandos a <strong class="text-emerald-400">~50Hz</strong>, mas um VLA de 7B não inferе tão rápido. A solução é o <strong class="text-emerald-400">action chunking</strong>: o modelo prevê um <strong class="text-emerald-400">bloco</strong> de H ações futuras de uma vez (ex: 16-50 passos), que são executadas abertas enquanto a próxima inferência roda. Com <strong class="text-emerald-400">receding horizon</strong>, re-prevê antes do chunk acabar, mantendo reatividade. Isso amortiza a latência da rede e suaviza a trajetória — ideia introduzida pelo ACT e adotada por Diffusion Policy e π0. A PI publicou o <strong class="text-emerald-400">Real-Time Action Chunking</strong> (jun/2025) para executar chunks de VLAs grandes com latência alta; o LeRobot suporta RTC desde a v0.5 (mar/2026).</p>
 <div class="space-y-6 mb-6">
 <div class="flex items-start gap-4">
 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">1</div>
@@ -328,6 +330,7 @@ latent = CrossAttn(latent, img_tok)  # consulta a imagem</code></pre>
 <div class="bg-gradient-to-br dark:from-emerald-900/30 dark:to-dark-800 light-bg-white rounded-xl border border-emerald-500/30 p-6 mb-6">
 <h3 class="text-lg font-semibold text-emerald-400 mb-3">💡 Latência é orçamento</h3>
 <p class="dark:text-gray-300 light-text-gray-700">Se a inferência leva 100ms e o chunk cobre 320ms (16 passos a 50Hz), você tem folga para reatividade. Chunks grandes demais reduzem reatividade; pequenos demais estouram a latência. O ajuste de H é engenharia, não detalhe.</p>
+<p class="dark:text-gray-300 light-text-gray-700 mt-3">Em 2026 a hierarquia ganhou um terceiro nível. No <strong class="text-emerald-400">Helix 02</strong> da Figure (jan/2026), o S2 (VLM lento) planeja, o S1 emite alvos de junta a <strong>200 Hz</strong> e um novo <strong>S0</strong> — controlador de corpo inteiro aprendido, 10M de parâmetros — roda a <strong>1 kHz</strong>, substituindo 109.504 linhas de C++. O GR00T N1.7 chama sua versão de "Action Cascade", e o Gemini Robotics ER 2 (jul/2026) orquestra o VLA como ferramenta.</p>
 </div>
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
 <div class="dark:bg-dark-800 light-bg-gray-50 rounded-lg p-4 border border-dark-600 light-border-gray-200"><p class="text-sm font-semibold text-emerald-400 mb-1">Action chunking</p><p class="text-xs dark:text-gray-400 light-text-gray-600">Prever bloco de ações futuras.</p></div>
@@ -346,7 +349,8 @@ latent = CrossAttn(latent, img_tok)  # consulta a imagem</code></pre>
 <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Estado importa</strong><span class="dark:text-gray-400 light-text-gray-600"> — propriocepção e histórico evitam ambiguidade temporal.</span></div></div>
 <div class="flex gap-3"><span class="text-emerald-400 mt-0.5">✓</span><div><strong class="dark:text-white light-text-gray-900">Loop de controle</strong><span class="dark:text-gray-400 light-text-gray-600"> — action chunking + receding horizon amortizam a latência.</span></div></div>
 </div>
-<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-emerald-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">1.3 — Evolução dos modelos: a linhagem RT-1 → RT-2 → OpenVLA → π0 → Qwen-VLA.</p></div>
+<div class="dark:bg-dark-900/50 light-bg-gray-50 rounded-lg p-4 mb-8"><h3 class="font-semibold text-emerald-400 mb-1">Próximo módulo</h3><p class="dark:text-gray-300 light-text-gray-700">1.3 — Evolução dos Modelos: RT-1, RT-2, OpenVLA, π0, π0.7 — a linhagem até out/2026.</p></div>
+<p class="text-xs dark:text-gray-400 light-text-gray-600 mb-6">Atualizado em out/2026.</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-start">
 <a class="text-center px-6 py-3 dark:bg-dark-700 light-bg-gray-100 dark:text-gray-300 light-text-gray-700 rounded-lg font-semibold hover:opacity-90 transition" href="index.html">← Voltar à trilha</a>
 <a class="text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition" href="modulo-1-3.html">Próximo módulo →</a>
